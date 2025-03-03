@@ -1,0 +1,59 @@
+{
+  "content": {
+    "layout": "login",
+    "contents": [
+      {
+        "id": "main-layout",
+        "type": "layout",
+        "props": {
+          "tagName": "main",
+          "display": "flex",
+          "flexDirection": "col",
+          "padding": 4,
+          "margin": 2
+        }
+      },
+      {
+        "id": "inner-div",
+        "type": "layout",
+        "props": {
+          "tagName": "div",
+          "fullWidth": "true",
+          "height": "full"
+        },
+        "parent_id": "main-layout"
+      },
+      {
+        "id": "header",
+        "type": "heading",
+        "props": {
+          "as": "h6",
+          "children": "login Header",
+          "tagName": "h6"
+        },
+        "parent_id": "inner-div"
+      },
+      {
+        "id": "paragraph-1",
+        "type": "paragraph",
+        "props": {
+          "color": "danger",
+          "size": "lg",
+          "weight": "semibold",
+          "children": "Paragraph text",
+          "tagName": "p"
+        },
+        "parent_id": "inner-div"
+      },
+      {
+        "id": "login-button",
+        "type": "button",
+        "props": {
+          "children": "Click me",
+          "tagName": "button"
+        },
+        "parent_id": "inner-div"
+      }
+    ]
+  }
+}
