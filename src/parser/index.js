@@ -7,29 +7,26 @@ export function parseJSXToJSON(jsx, layout = "default") {
   if (typeof jsx !== "string")
     throw new Error("Invalid input: Expected string content");
 
+  let idCounter = 0;
   const elements = [];
   const stack = [];
-  let idCounter = 0;
-
-  const ast = parse(jsx, {
-    sourceType: "module",
-    plugins: ["jsx", "typescript"],
-  });
 
   // Freeze the AST to prevent accidental mutations.
-  Object.freeze(ast);
+  const ast = Object.freeze(
+    parse(jsx, {
+      sourceType: "module",
+      plugins: ["jsx", "typescript"],
+    })
+  );
 
   traverse.default(ast, {
     JSXElement: {
-      enter: (path) => {
-        const node = path.node;
+      enter({ node }) {
         const componentName = node.openingElement.name.name;
         const config =
           componentRegistry[componentName] || defaultComponentConfig;
-
         const { id, props } = processAttributes(node.openingElement.attributes);
         const elementId = id || `element-${idCounter++}`;
-
         const textContent = processChildren(node.children);
         if (textContent) props.children = textContent;
 
@@ -40,15 +37,12 @@ export function parseJSXToJSON(jsx, layout = "default") {
             ...props,
             tagName: getTagName(config, props, componentName),
           },
+          ...(stack.length && { parent_id: stack[stack.length - 1] }),
         };
-
-        const parentId = stack.length ? stack[stack.length - 1] : null;
-        if (parentId) element.parent_id = parentId;
-
         elements.push(element);
         stack.push(elementId);
       },
-      exit: () => {
+      exit() {
         stack.pop();
       },
     },

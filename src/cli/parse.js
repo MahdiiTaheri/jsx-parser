@@ -5,7 +5,7 @@ import os from "os";
 import chokidar from "chokidar";
 import { parseJSXToJSON } from "../parser/index.js";
 
-const parseCommand = new Command("parse");
+const parseCommand = new Command("jsxToJson");
 
 function ensureOutputDirectory(outputDir) {
   try {
@@ -76,7 +76,7 @@ function processDirectory(dirPath, outputDir, layout) {
 
 parseCommand
   .argument("<input>", "Path to a TSX/JSX file or directory")
-  .option("-o, --output <dir>", "Output directory", "./outputs")
+  .option("-o, --output <dir>", "Output directory", "json")
   .option("-l, --layout <type>", "Set layout type", "default")
   .option("-w, --watch", "Watch for changes")
   .action((inputPath, options) => {

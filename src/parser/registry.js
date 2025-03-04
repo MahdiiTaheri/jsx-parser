@@ -4,18 +4,10 @@ export const componentRegistry = {
     tagNameProp: "tagName",
     defaults: { tagName: "div" },
   },
-  Text: {
-    component: "text",
-    tagNameProp: "as",
-    defaults: { tagName: "h1" },
-  },
-  Button: {
-    component: "button",
-  },
-  Icon: {
-    component: "icon",
-  },
-  // Add new components here
+  Text: { component: "text", tagNameProp: "as", defaults: { tagName: "h1" } },
+  Button: { component: "button" },
+  Icon: { component: "icon" },
+  // Additional components can be added here.
 };
 
 export const defaultComponentConfig = {

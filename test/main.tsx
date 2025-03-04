@@ -10,8 +10,8 @@ function test() {
     >
       <Layout id="inner-div" tagName="div" full-width="true" height="full">
         <Text
+          id="text"
           is_underline="true"
-          id="paragraph-1"
           color="danger"
           size="lg"
           weight="semibold"
@@ -20,7 +20,7 @@ function test() {
           Paragraph text
         </Text>
         <Button id="login-button">Click me!!!!</Button>
-        <Icon name="home" id="login-button" />
+        <Icon name="home" id="icon" />
       </Layout>
     </Layout>
   );

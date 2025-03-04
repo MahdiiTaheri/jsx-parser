@@ -24,7 +24,7 @@
         "parent_id": "main-layout"
       },
       {
-        "id": "paragraph-1",
+        "id": "text",
         "component": "text",
         "props": {
           "is_underline": "true",
@@ -47,7 +47,7 @@
         "parent_id": "inner-div"
       },
       {
-        "id": "login-button",
+        "id": "icon",
         "component": "icon",
         "props": {
           "name": "home",

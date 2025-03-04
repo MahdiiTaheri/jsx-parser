@@ -6,9 +6,10 @@
     "tsx-parser": "src/cli/index.js"
   },
   "scripts": {
-    "parse": "npx tsx-parser parse",
-    "parse:all": "npx tsx-parser parse test -o outputs -l default",
-    "parse:watch": "npx tsx-parser parse test -o outputs -w",
+    "jsxToJson": "npx tsx-parser jsxToJson",
+    "jsxToJson:all": "npx tsx-parser jsxToJson test -o json -l default",
+    "jsxToJson:watch": "npx tsx-parser jsxToJson test -o json -w",
+    "jsonToJsx": "npx tsx-parser jsonToJsx",
     "server": "npx tsx-parser server"
   },
   "dependencies": {

@@ -1,37 +1,35 @@
-export function getTagName(config, props, componentName) {
-  if (config.tagName) return config.tagName;
-  if (config.tagNameProp)
-    return props[config.tagNameProp] || config.defaults?.tagName;
-  return componentName.toLowerCase();
-}
+export const getTagName = (config, props, componentName) =>
+  config.tagName ||
+  (config.tagNameProp
+    ? props[config.tagNameProp] || config.defaults?.tagName
+    : componentName.toLowerCase());
 
-export function processAttributes(attributes) {
+export const processAttributes = (attributes) => {
   let id = null;
   const props = {};
-
-  attributes.forEach((attr) => {
-    const name = attr.name.name;
-    let value = attr.value?.value || attr.value?.expression?.value;
-
-    if (typeof value === "string" && !isNaN(value)) value = parseInt(value, 10);
-
+  for (const attr of attributes) {
+    const {
+      name: { name },
+      value,
+    } = attr;
+    let val = value?.value ?? value?.expression?.value;
+    if (typeof val === "string" && !isNaN(val)) val = parseInt(val, 10);
     if (name === "id") {
-      id = value;
-      return;
+      id = val;
+      continue;
     }
-
-    props[name] = value;
-  });
-
+    props[name] = val;
+  }
   return { id, props };
-}
+};
 
-export function processChildren(children) {
-  return children.reduce((acc, child) => {
+export const processChildren = (children) => {
+  let text = "";
+  for (const child of children) {
     if (child.type === "JSXText") {
-      const text = child.value.trim();
-      if (text) acc += text;
+      const trimmed = child.value.trim();
+      if (trimmed) text += trimmed;
     }
-    return acc;
-  }, "");
-}
+  }
+  return text;
+};
