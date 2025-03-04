@@ -1,10 +1,10 @@
 {
   "content": {
-    "layout": "default",
+    "layout_file": "default",
     "contents": [
       {
         "id": "main-layout",
-        "type": "layout",
+        "component": "layout",
         "props": {
           "tagName": "main",
           "display": "flex",
@@ -15,7 +15,7 @@
       },
       {
         "id": "inner-div",
-        "type": "layout",
+        "component": "layout",
         "props": {
           "tagName": "div",
           "full_width": "true",
@@ -25,7 +25,7 @@
       },
       {
         "id": "header",
-        "type": "text",
+        "component": "text",
         "props": {
           "as": "h6",
           "children": "login Header",
@@ -35,7 +35,7 @@
       },
       {
         "id": "paragraph-1",
-        "type": "text",
+        "component": "text",
         "props": {
           "color": "danger",
           "size": "lg",
@@ -47,7 +47,7 @@
       },
       {
         "id": "login-button",
-        "type": "button",
+        "component": "button",
         "props": {
           "children": "Click me",
           "tagName": "button"

@@ -35,7 +35,7 @@ export function parseJSXToJSON(jsx, layout = "default") {
 
         const element = {
           id: elementId,
-          type: config.type,
+          component: config.component,
           props: {
             ...props,
             tagName: getTagName(config, props, componentName),
@@ -56,7 +56,7 @@ export function parseJSXToJSON(jsx, layout = "default") {
 
   return {
     content: {
-      layout: layout,
+      layout_file: layout,
       contents: elements,
     },
   };

@@ -1,19 +1,19 @@
 export const componentRegistry = {
   Layout: {
-    type: "layout",
+    component: "layout",
     tagNameProp: "tagName",
     defaults: { tagName: "div" },
   },
   Text: {
-    type: "text",
+    component: "text",
     tagNameProp: "as",
     defaults: { tagName: "h1" },
   },
   Button: {
-    type: "button",
+    component: "button",
   },
   Icon: {
-    type: "icon",
+    component: "icon",
   },
   // Add new components here
 };

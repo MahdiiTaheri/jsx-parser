@@ -1,10 +1,10 @@
 {
   "content": {
-    "layout": "default",
+    "layout_file": "default",
     "contents": [
       {
         "id": "main-layout",
-        "type": "layout",
+        "component": "layout",
         "props": {
           "tagName": "main",
           "display": "flex",
@@ -15,7 +15,7 @@
       },
       {
         "id": "inner-div",
-        "type": "layout",
+        "component": "layout",
         "props": {
           "tagName": "div",
           "full-width": "true",
@@ -25,7 +25,7 @@
       },
       {
         "id": "paragraph-1",
-        "type": "text",
+        "component": "text",
         "props": {
           "is_underline": "true",
           "color": "danger",
@@ -39,7 +39,7 @@
       },
       {
         "id": "login-button",
-        "type": "button",
+        "component": "button",
         "props": {
           "children": "Click me!!!!",
           "tagName": "button"
@@ -48,7 +48,7 @@
       },
       {
         "id": "login-button",
-        "type": "icon",
+        "component": "icon",
         "props": {
           "name": "home",
           "tagName": "icon"
