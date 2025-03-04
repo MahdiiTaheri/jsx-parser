@@ -1,6 +1,6 @@
 {
   "content": {
-    "layout": "login",
+    "layout": "default",
     "contents": [
       {
         "id": "main-layout",
