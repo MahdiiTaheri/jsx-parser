@@ -15,7 +15,7 @@ function test() {
         <Paragraph id="paragraph-1" color="danger" size="lg" weight="semibold">
           Paragraph text
         </Paragraph>
-        <Button id="login-button">Click me</Button>
+        <Button id="login-button">Click me!!!!</Button>
       </Layout>
     </Layout>
   );

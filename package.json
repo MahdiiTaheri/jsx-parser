@@ -3,25 +3,28 @@
   "version": "1.0.0",
   "type": "module",
   "bin": {
-    "tsx-parser": "lib/cli.js"
+    "tsx-parser": "src/cli/index.js"
   },
   "scripts": {
     "parse": "npx tsx-parser parse",
     "parse:all": "npx tsx-parser parse test -o outputs -l default",
-    "parse:watch": "npx tsx-parser parse test -o outputs -w"
+    "parse:watch": "npx tsx-parser parse test -o outputs -w",
+    "server": "npx tsx-parser server"
   },
   "dependencies": {
     "@babel/generator": "^7.26.9",
     "@babel/parser": "^7.26.9",
     "@babel/traverse": "^7.26.9",
-    "@babel/types": "^7.26.9"
+    "@babel/types": "^7.26.9",
+    "@hono/node-server": "^1.13.8",
+    "hono": "^4.7.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",
-    "chokidar": "^3.5.3",
-    "commander": "^11.0.0"
+    "chokidar": "^3.6.0",
+    "commander": "^11.1.0"
   },
   "files": [
-    "lib"
+    "src"
   ]
 }
