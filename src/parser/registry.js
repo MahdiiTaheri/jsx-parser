@@ -4,19 +4,16 @@ export const componentRegistry = {
     tagNameProp: "tagName",
     defaults: { tagName: "div" },
   },
-  Heading: {
-    type: "heading",
+  Text: {
+    type: "text",
     tagNameProp: "as",
     defaults: { tagName: "h1" },
   },
-  Paragraph: {
-    type: "paragraph",
-    tagNameProp: "as",
-    defaults: { tagName: "p" },
-  },
   Button: {
     type: "button",
-    tagName: "button",
+  },
+  Icon: {
+    type: "icon",
   },
   // Add new components here
 };

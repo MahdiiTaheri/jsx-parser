@@ -4,17 +4,17 @@ function test() {
       id="main-layout"
       tagName="main"
       display="flex"
-      flexDirection="col"
+      flex_direction="col"
       padding="4"
       margin="2"
     >
-      <Layout id="inner-div" tagName="div" fullWidth="true" height="full">
-        <Heading id="header" as="h6">
+      <Layout id="inner-div" tagName="div" full_width="true" height="full">
+        <Text id="header" as="h6">
           login Header
-        </Heading>
-        <Paragraph id="paragraph-1" color="danger" size="lg" weight="semibold">
+        </Text>
+        <Text id="paragraph-1" color="danger" size="lg" weight="semibold">
           Paragraph text
-        </Paragraph>
+        </Text>
         <Button id="login-button">Click me</Button>
       </Layout>
     </Layout>

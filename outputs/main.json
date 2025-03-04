@@ -8,7 +8,7 @@
         "props": {
           "tagName": "main",
           "display": "flex",
-          "flexDirection": "col",
+          "flex_direction": "col",
           "padding": 4,
           "margin": 2
         }
@@ -18,28 +18,20 @@
         "type": "layout",
         "props": {
           "tagName": "div",
-          "fullWidth": "true",
+          "full-width": "true",
           "height": "full"
         },
         "parent_id": "main-layout"
       },
       {
-        "id": "header",
-        "type": "heading",
-        "props": {
-          "as": "h6",
-          "children": "login Header",
-          "tagName": "h6"
-        },
-        "parent_id": "inner-div"
-      },
-      {
         "id": "paragraph-1",
-        "type": "paragraph",
+        "type": "text",
         "props": {
+          "is_underline": "true",
           "color": "danger",
           "size": "lg",
           "weight": "semibold",
+          "as": "p",
           "children": "Paragraph text",
           "tagName": "p"
         },
@@ -51,6 +43,15 @@
         "props": {
           "children": "Click me!!!!",
           "tagName": "button"
+        },
+        "parent_id": "inner-div"
+      },
+      {
+        "id": "login-button",
+        "type": "icon",
+        "props": {
+          "name": "home",
+          "tagName": "icon"
         },
         "parent_id": "inner-div"
       }

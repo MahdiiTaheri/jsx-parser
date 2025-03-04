@@ -4,18 +4,23 @@ function test() {
       id="main-layout"
       tagName="main"
       display="flex"
-      flexDirection="col"
+      flex_direction="col"
       padding="4"
       margin="2"
     >
-      <Layout id="inner-div" tagName="div" fullWidth="true" height="full">
-        <Heading id="header" as="h6">
-          login Header
-        </Heading>
-        <Paragraph id="paragraph-1" color="danger" size="lg" weight="semibold">
+      <Layout id="inner-div" tagName="div" full-width="true" height="full">
+        <Text
+          is_underline="true"
+          id="paragraph-1"
+          color="danger"
+          size="lg"
+          weight="semibold"
+          as="p"
+        >
           Paragraph text
-        </Paragraph>
+        </Text>
         <Button id="login-button">Click me!!!!</Button>
+        <Icon name="home" id="login-button" />
       </Layout>
     </Layout>
   );
