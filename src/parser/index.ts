@@ -1,17 +1,28 @@
 import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
-import { componentRegistry, defaultComponentConfig } from "./registry.js";
-import { getTagName, processAttributes, processChildren } from "./utils.js";
+import traverse, { NodePath } from "@babel/traverse";
+import {
+  JSXElement,
+  isJSXMemberExpression,
+  isJSXIdentifier,
+} from "@babel/types";
+import { componentRegistry, defaultComponentConfig } from "./registry";
+import { getTagName, processAttributes, processChildren } from "./utils";
 
-export function parseJSXToJSON(jsx, layout = "default") {
+interface ParsedElement {
+  id: string;
+  component: string;
+  props: Record<string, string>;
+  parent_id?: string;
+}
+
+export function parseJSXToJSON(jsx: string, layout: string = "dashboard") {
   if (typeof jsx !== "string")
     throw new Error("Invalid input: Expected string content");
 
   let idCounter = 0;
-  const elements = [];
-  const stack = [];
+  const elements: ParsedElement[] = [];
+  const stack: string[] = [];
 
-  // Freeze the AST to prevent accidental mutations.
   const ast = Object.freeze(
     parse(jsx, {
       sourceType: "module",
@@ -19,26 +30,25 @@ export function parseJSXToJSON(jsx, layout = "default") {
     })
   );
 
-  traverse.default(ast, {
-    JSXFragment: {
-      enter(path) {
-        // No-op: By not pushing onto the stack, children are processed using the current parent context.
-      },
-      exit(path) {
-        // No-op
-      },
-    },
+  traverse(ast, {
     JSXElement: {
-      enter({ node }) {
-        const componentName = node.openingElement.name.name;
+      enter(path: NodePath<JSXElement>) {
+        const node = path.node;
+        const nameNode = node.openingElement.name;
+        let componentName: string;
+        if (isJSXIdentifier(nameNode)) componentName = nameNode.name;
+        else if (isJSXMemberExpression(nameNode))
+          componentName = nameNode.property.name;
+        else throw new Error("Unsupported JSX element name type");
+
         const config =
           componentRegistry[componentName] || defaultComponentConfig;
         const { id, props } = processAttributes(node.openingElement.attributes);
-        const elementId = id || `element-${idCounter++}`;
+        const elementId = id ? String(id) : `element-${idCounter++}`;
         const textContent = processChildren(node.children);
         if (textContent) props.children = textContent;
 
-        const element = {
+        const element: ParsedElement = {
           id: elementId,
           component: config.component,
           props: {

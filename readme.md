@@ -1,15 +1,11 @@
-# TSX/JSX to JSON Parser
+To install dependencies:
+```sh
+bun install
+```
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+To run:
+```sh
+bun run dev
+```
 
-**Convert React components (TSX/JSX) into structured JSON definitions with ease!**
-
-## Features ✨
-
-- 🔄 Converts JSX/TSX files to JSON format
-- 📁 Processes entire directories recursively
-- 🔍 Watches files for changes and auto-updates JSON
-- 📝 Generates meaningful output filenames
-- 🛠️ Extendable component registry system
-- 🚨 Clear error messages and validation
+open http://localhost:3000

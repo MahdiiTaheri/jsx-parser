@@ -1,4 +1,13 @@
-export const componentRegistry = {
+export interface ComponentConfig {
+  component: string;
+  tagNameProp?: string;
+  defaults?: {
+    as: string;
+  };
+  [key: string]: any;
+}
+
+export const componentRegistry: Record<string, ComponentConfig> = {
   Layout: {
     component: "layout",
     tagNameProp: "as",
@@ -11,7 +20,8 @@ export const componentRegistry = {
   // Additional components can be added here.
 };
 
-export const defaultComponentConfig = {
+export const defaultComponentConfig: ComponentConfig = {
   type: "unknown",
+  component: "unknown",
   tagName: "div",
 };

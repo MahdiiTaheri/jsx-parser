@@ -3,7 +3,7 @@
     "layout_file": "dashboard",
     "contents": [
       {
-        "id": "section-1",
+        "id": "section-3",
         "component": "layout",
         "props": {
           "as": "section",
@@ -23,7 +23,7 @@
           "flex_direction": "col",
           "gap": 1
         },
-        "parent_id": "section-1"
+        "parent_id": "section-3"
       },
       {
         "id": "section-1-title",
