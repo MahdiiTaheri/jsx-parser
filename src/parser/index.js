@@ -43,10 +43,13 @@ export function parseJSXToJSON(jsx, layout = "default") {
           component: config.component,
           props: {
             ...props,
-            as: getTagName(config, props, componentName),
+            ...(config.tagNameProp && {
+              as: getTagName(config, props, componentName),
+            }),
           },
           ...(stack.length && { parent_id: stack[stack.length - 1] }),
         };
+
         elements.push(element);
         stack.push(elementId);
       },

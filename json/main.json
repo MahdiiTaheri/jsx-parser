@@ -46,7 +46,7 @@
         "parent_id": "title-wrapper-1"
       },
       {
-        "id": "divider-1",
+        "id": "divider",
         "component": "divider",
         "props": {
           "text": "جدا کننده",
