@@ -1,20 +1,56 @@
 function ConvertedComponent() {
-    return (
-      <Layout id="main-layout" as="main" display="flex" flex_direction="col" padding={4} margin={2}>
-      <Layout id="inner-div" tagName="div" full-width="true" height="full">
-        <Text id="text" is_underline="true" color="danger" size="lg" weight="semibold" as="p">
-Paragraph text
-        </Text>
-        <Button id="login-button" as="button">
-          <Text id="button-text" is_underline="true" color="danger" size="lg" weight="semibold" as="p">
-Click me
+  return (
+    <>
+      <Layout
+        id="section-1"
+        as="section"
+        fullWidth={true}
+        padding={4}
+        background="white"
+        radius="xl"
+        display="flex"
+      >
+        <Layout
+          id="title-wrapper-1"
+          as="div"
+          display="flex"
+          flexDirection="col"
+          gap={1}
+        >
+          <Text id="section-1-title" as="h3">
+            عنوان بخش اول
           </Text>
-        </Button>
-        <Icon id="icon" name="home" as="icon" />
+          <Text id="section-1-subtitle" as="p" color="muted" size="xs">
+            متن توضیحات برای بخش اول
+          </Text>
+        </Layout>
       </Layout>
-    </Layout>
-    );
-  }
-  
-  export default ConvertedComponent;
-  
+      <Layout
+        id="section-2"
+        as="section"
+        fullWidth={true}
+        padding={4}
+        background="white"
+        radius="xl"
+        display="flex"
+      >
+        <Layout
+          id="title-wrapper-2"
+          as="div"
+          display="flex"
+          flexDirection="col"
+          gap={1}
+        >
+          <Text id="section-2-title" as="h3">
+            عنوان بخش دوم
+          </Text>
+          <Text id="section-2-subtitle" as="p" color="muted" size="xs">
+            متن توضیحات برای بخش دوم
+          </Text>
+        </Layout>
+      </Layout>
+    </>
+  );
+}
+
+export default ConvertedComponent;

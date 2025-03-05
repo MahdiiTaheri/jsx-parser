@@ -20,6 +20,14 @@ export function parseJSXToJSON(jsx, layout = "default") {
   );
 
   traverse.default(ast, {
+    JSXFragment: {
+      enter(path) {
+        // No-op: By not pushing onto the stack, children are processed using the current parent context.
+      },
+      exit(path) {
+        // No-op
+      },
+    },
     JSXElement: {
       enter({ node }) {
         const componentName = node.openingElement.name.name;

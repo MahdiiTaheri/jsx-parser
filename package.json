@@ -7,7 +7,7 @@
   },
   "scripts": {
     "jsxToJson": "npx tsx-parser jsxToJson",
-    "jsxToJson:all": "npx tsx-parser jsxToJson test -o json -l default",
+    "jsxToJson:all": "npx tsx-parser jsxToJson test -o json -l dashboard",
     "jsxToJson:watch": "npx tsx-parser jsxToJson test -o json -w",
     "jsonToJsx": "npx tsx-parser jsonToJsx",
     "api": "npx tsx-parser api"

@@ -1,6 +1,6 @@
 {
   "content": {
-    "layout_file": "default",
+    "layout_file": "dashboard",
     "contents": [
       {
         "id": "main-layout",

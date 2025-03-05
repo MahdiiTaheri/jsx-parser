@@ -1,70 +1,92 @@
 {
   "content": {
-    "layout_file": "default",
+    "layout_file": "dashboard",
     "contents": [
       {
-        "id": "main-layout",
+        "id": "section-1",
         "component": "layout",
         "props": {
-          "as": "main",
-          "display": "flex",
-          "flex_direction": "col",
-          "padding": 4,
-          "margin": 2
+          "as": "section",
+          "fullWidth": true,
+          "padding": 5,
+          "background": "white",
+          "radius": "xl",
+          "display": "flex"
         }
       },
       {
-        "id": "inner-div",
+        "id": "title-wrapper-1",
         "component": "layout",
         "props": {
-          "tagName": "div",
-          "full-width": "true",
-          "height": "full"
+          "as": "div",
+          "display": "flex",
+          "flexDirection": "col",
+          "gap": 1
         },
-        "parent_id": "main-layout"
+        "parent_id": "section-1"
       },
       {
-        "id": "text",
+        "id": "section-1-title",
         "component": "text",
         "props": {
-          "is_underline": "true",
-          "color": "danger",
-          "size": "lg",
-          "weight": "semibold",
-          "as": "p",
-          "children": "Paragraph text"
+          "as": "h2",
+          "children": "عنوان بخش اول"
         },
-        "parent_id": "inner-div"
+        "parent_id": "title-wrapper-1"
       },
       {
-        "id": "login-button",
-        "component": "button",
-        "props": {
-          "as": "button"
-        },
-        "parent_id": "inner-div"
-      },
-      {
-        "id": "button-text",
+        "id": "section-1-subtitle",
         "component": "text",
         "props": {
-          "is_underline": "true",
-          "color": "danger",
-          "size": "lg",
-          "weight": "semibold",
           "as": "p",
-          "children": "Click me"
+          "color": "muted",
+          "size": "sm",
+          "children": "متن توضیحات برای بخش اول"
         },
-        "parent_id": "login-button"
+        "parent_id": "title-wrapper-1"
       },
       {
-        "id": "icon",
-        "component": "icon",
+        "id": "section-2",
+        "component": "layout",
         "props": {
-          "name": "home",
-          "as": "icon"
+          "as": "section",
+          "fullWidth": true,
+          "padding": 5,
+          "background": "white",
+          "radius": "xl",
+          "display": "flex"
+        }
+      },
+      {
+        "id": "title-wrapper-2",
+        "component": "layout",
+        "props": {
+          "as": "div",
+          "display": "flex",
+          "flexDirection": "col",
+          "gap": 1
         },
-        "parent_id": "inner-div"
+        "parent_id": "section-2"
+      },
+      {
+        "id": "section-2-title",
+        "component": "text",
+        "props": {
+          "as": "h2",
+          "children": "عنوان بخش دوم"
+        },
+        "parent_id": "title-wrapper-2"
+      },
+      {
+        "id": "section-2-subtitle",
+        "component": "text",
+        "props": {
+          "as": "p",
+          "color": "muted",
+          "size": "sm",
+          "children": "متن توضیحات برای بخش دوم"
+        },
+        "parent_id": "title-wrapper-2"
       }
     ]
   }
