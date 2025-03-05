@@ -2,7 +2,7 @@ function test() {
   return (
     <Layout
       id="main-layout"
-      tagName="main"
+      as="main"
       display="flex"
       flex_direction="col"
       padding="4"
@@ -19,7 +19,18 @@ function test() {
         >
           Paragraph text
         </Text>
-        <Button id="login-button">Click me!!!!</Button>
+        <Button id="login-button">
+          <Text
+            id="button-text"
+            is_underline="true"
+            color="danger"
+            size="lg"
+            weight="semibold"
+            as="p"
+          >
+            Click me
+          </Text>
+        </Button>
         <Icon name="home" id="icon" />
       </Layout>
     </Layout>

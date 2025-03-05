@@ -35,7 +35,7 @@ export function parseJSXToJSON(jsx, layout = "default") {
           component: config.component,
           props: {
             ...props,
-            tagName: getTagName(config, props, componentName),
+            as: getTagName(config, props, componentName),
           },
           ...(stack.length && { parent_id: stack[stack.length - 1] }),
         };

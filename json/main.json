@@ -6,7 +6,7 @@
         "id": "main-layout",
         "component": "layout",
         "props": {
-          "tagName": "main",
+          "as": "main",
           "display": "flex",
           "flex_direction": "col",
           "padding": 4,
@@ -32,8 +32,7 @@
           "size": "lg",
           "weight": "semibold",
           "as": "p",
-          "children": "Paragraph text",
-          "tagName": "p"
+          "children": "Paragraph text"
         },
         "parent_id": "inner-div"
       },
@@ -41,17 +40,29 @@
         "id": "login-button",
         "component": "button",
         "props": {
-          "children": "Click me!!!!",
-          "tagName": "button"
+          "as": "button"
         },
         "parent_id": "inner-div"
+      },
+      {
+        "id": "button-text",
+        "component": "text",
+        "props": {
+          "is_underline": "true",
+          "color": "danger",
+          "size": "lg",
+          "weight": "semibold",
+          "as": "p",
+          "children": "Click me"
+        },
+        "parent_id": "login-button"
       },
       {
         "id": "icon",
         "component": "icon",
         "props": {
           "name": "home",
-          "tagName": "icon"
+          "as": "icon"
         },
         "parent_id": "inner-div"
       }

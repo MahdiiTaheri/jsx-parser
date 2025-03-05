@@ -1,10 +1,10 @@
 export const componentRegistry = {
   Layout: {
     component: "layout",
-    tagNameProp: "tagName",
-    defaults: { tagName: "div" },
+    tagNameProp: "as",
+    defaults: { as: "div" },
   },
-  Text: { component: "text", tagNameProp: "as", defaults: { tagName: "h1" } },
+  Text: { component: "text", tagNameProp: "as", defaults: { as: "h1" } },
   Button: { component: "button" },
   Icon: { component: "icon" },
   // Additional components can be added here.

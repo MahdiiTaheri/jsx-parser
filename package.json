@@ -10,7 +10,7 @@
     "jsxToJson:all": "npx tsx-parser jsxToJson test -o json -l default",
     "jsxToJson:watch": "npx tsx-parser jsxToJson test -o json -w",
     "jsonToJsx": "npx tsx-parser jsonToJsx",
-    "server": "npx tsx-parser server"
+    "api": "npx tsx-parser api"
   },
   "dependencies": {
     "@babel/generator": "^7.26.9",

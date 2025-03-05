@@ -28,8 +28,7 @@
         "component": "text",
         "props": {
           "as": "h6",
-          "children": "login Header",
-          "tagName": "h6"
+          "children": "login Header"
         },
         "parent_id": "inner-div"
       },
@@ -40,8 +39,7 @@
           "color": "danger",
           "size": "lg",
           "weight": "semibold",
-          "children": "Paragraph text",
-          "tagName": "h1"
+          "children": "Paragraph text"
         },
         "parent_id": "inner-div"
       },
@@ -50,7 +48,7 @@
         "component": "button",
         "props": {
           "children": "Click me",
-          "tagName": "button"
+          "as": "button"
         },
         "parent_id": "inner-div"
       }
