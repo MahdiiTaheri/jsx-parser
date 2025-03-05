@@ -7,6 +7,7 @@ export const componentRegistry = {
   Text: { component: "text", tagNameProp: "as", defaults: { as: "h1" } },
   Button: { component: "button" },
   Icon: { component: "icon" },
+  Divider: { component: "divider" },
   // Additional components can be added here.
 };
 

@@ -1,10 +1,10 @@
-function test() {
+function ConvertedComponent() {
   return (
     <>
       <Layout
         id="section-1"
         as="section"
-        fullWidth={true}
+        full_width={true}
         padding={5}
         background="white"
         radius="xl"
@@ -14,7 +14,7 @@ function test() {
           id="title-wrapper-1"
           as="div"
           display="flex"
-          flexDirection="col"
+          flex_direction="col"
           gap={1}
         >
           <Text id="section-1-title" as="h2">
@@ -25,10 +25,11 @@ function test() {
           </Text>
         </Layout>
       </Layout>
+      <Divider id="divider" text="جدا کننده" line_style={"dotted"} />
       <Layout
         id="section-2"
         as="section"
-        fullWidth={true}
+        full_width={true}
         padding={5}
         background="white"
         radius="xl"
@@ -38,7 +39,7 @@ function test() {
           id="title-wrapper-2"
           as="div"
           display="flex"
-          flexDirection="col"
+          flex_direction="col"
           gap={1}
         >
           <Text id="section-2-title" as="h2">
@@ -53,4 +54,4 @@ function test() {
   );
 }
 
-export default test;
+export default ConvertedComponent;

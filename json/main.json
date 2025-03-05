@@ -7,7 +7,7 @@
         "component": "layout",
         "props": {
           "as": "section",
-          "fullWidth": true,
+          "full_width": true,
           "padding": 5,
           "background": "white",
           "radius": "xl",
@@ -20,7 +20,7 @@
         "props": {
           "as": "div",
           "display": "flex",
-          "flexDirection": "col",
+          "flex_direction": "col",
           "gap": 1
         },
         "parent_id": "section-1"
@@ -46,11 +46,19 @@
         "parent_id": "title-wrapper-1"
       },
       {
+        "id": "divider-1",
+        "component": "divider",
+        "props": {
+          "text": "جدا کننده",
+          "line_style": "dotted"
+        }
+      },
+      {
         "id": "section-2",
         "component": "layout",
         "props": {
           "as": "section",
-          "fullWidth": true,
+          "full_width": true,
           "padding": 5,
           "background": "white",
           "radius": "xl",
@@ -63,7 +71,7 @@
         "props": {
           "as": "div",
           "display": "flex",
-          "flexDirection": "col",
+          "flex_direction": "col",
           "gap": 1
         },
         "parent_id": "section-2"
