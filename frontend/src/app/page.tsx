@@ -1,44 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { Clipboard, Check, RotateCw } from "lucide-react";
+import { parseJSXToJSON } from "../parser/index";
+import { convertJSONToJSX } from "../parser/reverse";
 
 const ConverterPage = () => {
   const [input, setInput] = useState("");
   const [conversionType, setConversionType] = useState("jsx-to-json");
+  const [output, setOutput] = useState("");
+  const [error, setError] = useState("");
+  const [isPending, setIsPending] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  const { mutate, isPending, isError, isSuccess, data, error } = useMutation({
-    mutationKey: ["convert", conversionType],
-    mutationFn: () =>
-      axios
-        .post(`${process.env.NEXT_PUBLIC_APP_URL}/${conversionType}`, input)
-        .then((res) => res.data),
-  });
 
   const handleConvert = () => {
     if (!input.trim()) return;
-    mutate();
+    setIsPending(true);
+    setError("");
+    setOutput("");
+
+    try {
+      if (conversionType === "jsx-to-json") {
+        const result = parseJSXToJSON(input);
+        setOutput(JSON.stringify(result, null, 2));
+      } else {
+        const json = JSON.parse(input);
+        const result = convertJSONToJSX(json);
+        setOutput(result);
+      }
+    } catch (err) {
+      if (err instanceof Error) setError(err?.message || "Conversion failed");
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const handleCopy = () => {
-    if (!data) return;
+    if (!output) return;
     const formattedData =
-      conversionType === "json-to-jsx"
-        ? formatJSX(data)
-        : JSON.stringify(data, null, 2);
+      conversionType === "json-to-jsx" ? formatJSX(output) : output;
     navigator.clipboard.writeText(formattedData);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const formatJSX = (data: unknown) => {
-    const jsxString = typeof data === "string" ? data : JSON.stringify(data);
-    return jsxString.replace(/></g, ">\n<").replace(/\s{2,}/g, "  ");
-  };
+  const formatJSX = (data: string) =>
+    data.replace(/></g, ">\n<").replace(/\s{2,}/g, "  ");
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-slate-900 text-white">
@@ -95,18 +103,18 @@ const ConverterPage = () => {
           </div>
         </div>
 
-        {isError && (
+        {error && (
           <motion.p
             className="text-rose-300 mt-4 p-3 bg-rose-900 rounded-lg"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            {error?.message || "Conversion failed"}
+            {error}
           </motion.p>
         )}
 
-        {isSuccess && (
+        {output && (
           <motion.div
             className="relative mt-6 overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
@@ -114,9 +122,7 @@ const ConverterPage = () => {
             transition={{ duration: 0.5 }}
           >
             <pre className="p-4 bg-slate-700 text-gray-200 rounded-lg overflow-auto text-sm max-h-80">
-              {conversionType === "json-to-jsx"
-                ? formatJSX(data)
-                : JSON.stringify(data, null, 2)}
+              {conversionType === "json-to-jsx" ? formatJSX(output) : output}
             </pre>
             <button
               onClick={handleCopy}
