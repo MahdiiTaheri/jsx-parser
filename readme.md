@@ -1,11 +1,3 @@
-To install dependencies:
-```sh
-bun install
-```
-
-To run:
-```sh
-bun run dev
-```
-
-open http://localhost:3000
+install with : `pnpm install` <br/> 
+run project: `pnpm run dev` <br/> 
+if there is any error in running the project use `nodejs 18`

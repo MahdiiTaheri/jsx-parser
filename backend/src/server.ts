@@ -1,10 +1,14 @@
 import { Hono } from "hono";
+import { serve } from '@hono/node-server'
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { parseJSXToJSON } from "./parser/index";
 import { convertJSONToJSX } from "./parser/reverse";
+import * as dotenv from "dotenv";
 
 const app = new Hono();
+dotenv.config();
+const BACKEND_PORT = parseInt(process.env.BACKEND_PORT || "3001", 10);
 
 app.use("*", cors()); // Allow all origins by default
 app.use(logger());
@@ -36,4 +40,9 @@ app.post("/json-to-jsx", async (c) => {
   }
 });
 
-export default app;
+serve({
+  fetch: app.fetch,
+  port: BACKEND_PORT,
+})
+
+// export default app;
