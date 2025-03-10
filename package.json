@@ -1,16 +1,39 @@
 {
-  "name": "integrated-jsx-parser",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "jsx-parser",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "concurrently \"bun run --filter frontend dev\" \"bun run --filter backend dev\"",
-    "build": "bun run --filter frontend build && bun run --filter backend build",
-    "start": "concurrently \"bun run --filter frontend start\" \"bun run --filter backend start\""
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "jsxToJson": "bun run src/cli/index.ts jsxToJson",
+    "jsxToJson:all": "bun run src/cli/index.ts jsxToJson results/jsx-input -o results/json-output -l dashboard",
+    "jsxToJson:watch": "bun run src/cli/index.ts jsxToJson results/jsx-input -o results/json-output -w",
+    "jsonToJsx": "bun run src/cli/index.ts jsonToJsx",
+    "jsonToJsx:all": "bun run src/cli/index.ts jsonToJsx results/json-output -o results/jsx-output"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "@babel/parser": "^7.26.9",
+    "@babel/traverse": "^7.26.9",
+    "@babel/types": "^7.26.9",
+    "lucide-react": "^0.479.0",
+    "motion": "^12.4.10",
+    "next": "15.2.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "chokidar": "^4.0.3",
+    "commander": "^13.1.0",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

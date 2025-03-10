@@ -19,8 +19,9 @@ function ensureOutputDirectory(outputDir: string) {
       console.log(`📂 Creating output directory: ${outputDir}`);
       mkdirSync(outputDir, { recursive: true });
     }
-  } catch (error: any) {
-    console.error(`❌ Failed to create output directory: ${error.message}`);
+  } catch (error) {
+    if (error instanceof Error)
+      console.error(`❌ Failed to create output directory: ${error.message}`);
   }
 }
 
@@ -37,8 +38,9 @@ function processFile(inputPath: string, outputDir: string, extension: string) {
 
     writeFileSync(outputPath, jsx, "utf8");
     console.log(`✅ Wrote JSX to ${outputPath}`);
-  } catch (error: any) {
-    console.error(`❌ Failed to process ${inputPath}: ${error.message}`);
+  } catch (error) {
+    if (error instanceof Error)
+      console.error(`❌ Failed to process ${inputPath}: ${error.message}`);
   }
 }
 
@@ -61,7 +63,7 @@ reverseCommand
   .argument("<input>", "Path to JSON file or directory of JSON files")
   .option("-o, --output <dir>", "Output directory", "results/jsx-output")
   .option("-e, --extension <ext>", "Output extension (jsx/tsx)", "jsx")
-  .action((inputPath: string, options: any) => {
+  .action((inputPath: string, options) => {
     const outputDir = options.output;
     const extension = options.extension;
 
@@ -74,8 +76,8 @@ reverseCommand
       else if (stats.isDirectory())
         processDirectory(inputPath, outputDir, extension);
       else throw new Error(`Invalid input type: ${inputPath}`);
-    } catch (error: any) {
-      console.error(`❌ Error: ${error.message}`);
+    } catch (error) {
+      if (error instanceof Error) console.error(`❌ Error: ${error.message}`);
       process.exit(1);
     }
   });

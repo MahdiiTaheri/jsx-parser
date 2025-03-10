@@ -6,7 +6,7 @@ declare module "@babel/traverse" {
     // You can add additional members as needed.
   }
 
-  export interface Visitor<S = {}> {
+  export interface Visitor<S = object> {
     [nodeType: string]:
       | {
           enter?(path: NodePath, state: S): void;
@@ -19,7 +19,7 @@ declare module "@babel/traverse" {
   /**
    * Traverse an AST using the provided visitor.
    */
-  export default function traverse<S = {}>(
+  export default function traverse<S = object>(
     ast: t.Node,
     visitors: Visitor<S>,
     state?: S

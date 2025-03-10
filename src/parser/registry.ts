@@ -4,7 +4,7 @@ export interface ComponentConfig {
   defaults?: {
     as: string;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export const componentRegistry: Record<string, ComponentConfig> = {

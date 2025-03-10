@@ -31,10 +31,11 @@ function ensureOutputDirectory(outputDir: string) {
         console.log(`✅ Permissions fixed for ${outputDir}`);
       }
     }
-  } catch (error: any) {
-    console.error(
-      `❌ Failed to create or fix permissions for output directory: ${error.message}`
-    );
+  } catch (error) {
+    if (error instanceof Error)
+      console.error(
+        `❌ Failed to create or fix permissions for output directory: ${error.message}`
+      );
   }
 }
 
@@ -48,8 +49,9 @@ function ensureExecutablePermissions(filePath: string) {
       chmodSync(filePath, stats.mode | 0o111);
       console.log(`✅ Permissions fixed for ${filePath}`);
     }
-  } catch (error: any) {
-    console.error(`❌ Failed to fix permissions: ${error.message}`);
+  } catch (error) {
+    if (error instanceof Error)
+      console.error(`❌ Failed to fix permissions: ${error.message}`);
   }
 }
 
@@ -66,8 +68,9 @@ function processFile(filePath: string, outputDir: string, layout: string) {
 
     writeFileSync(outputPath, JSON.stringify(jsonResult, null, 2));
     console.log(`✅ Successfully wrote to ${outputPath}`);
-  } catch (error: any) {
-    console.error(`❌ Error processing ${filePath}: ${error.message}`);
+  } catch (error) {
+    if (error instanceof Error)
+      console.error(`❌ Error processing ${filePath}: ${error.message}`);
   }
 }
 
@@ -88,7 +91,7 @@ parseCommand
   .option("-o, --output <dir>", "Output directory", "result/json-output")
   .option("-l, --layout <type>", "Set layout type", "default")
   .option("-w, --watch", "Watch for changes")
-  .action((inputPath: string, options: any) => {
+  .action((inputPath: string, options) => {
     const outputDir = options.output;
     const layout = options.layout;
     ensureOutputDirectory(outputDir);

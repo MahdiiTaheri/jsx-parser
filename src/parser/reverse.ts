@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export function convertJSONToJSX(json: any, indentSize: number = 2): string {
   if (!json || !json.content || !Array.isArray(json.content.contents))
     throw new Error("Invalid JSON structure");
