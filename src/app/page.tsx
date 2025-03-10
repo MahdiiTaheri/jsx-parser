@@ -2,24 +2,23 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Clipboard, Check, RotateCw } from "lucide-react";
+import EditorSection from "@/components/EditorSection";
+import ConversionControls from "@/components/ConversionControl";
 import { parseJSXToJSON } from "../parser/index";
 import { convertJSONToJSX } from "../parser/reverse";
+import { toast } from "sonner";
 
-const ConverterPage = () => {
-  const [input, setInput] = useState("");
-  const [conversionType, setConversionType] = useState("jsx-to-json");
-  const [output, setOutput] = useState("");
-  const [error, setError] = useState("");
-  const [isPending, setIsPending] = useState(false);
-  const [copied, setCopied] = useState(false);
+const ConverterPage: React.FC = () => {
+  const [input, setInput] = useState<string>("");
+  const [conversionType, setConversionType] = useState<string>("jsx-to-json");
+  const [output, setOutput] = useState<string>("");
+  // const [error, setError] = useState<string>("");
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   const handleConvert = () => {
     if (!input.trim()) return;
     setIsPending(true);
-    setError("");
-    setOutput("");
-
+    // setError("");
     try {
       if (conversionType === "jsx-to-json") {
         const result = parseJSXToJSON(input);
@@ -30,109 +29,59 @@ const ConverterPage = () => {
         setOutput(result);
       }
     } catch (err) {
-      if (err instanceof Error) setError(err?.message || "Conversion failed");
+      if (err instanceof Error) toast.error(err.message || "Conversion failed");
     } finally {
       setIsPending(false);
     }
   };
 
-  const handleCopy = () => {
-    if (!output) return;
-    const formattedData =
-      conversionType === "json-to-jsx" ? formatJSX(output) : output;
-    navigator.clipboard.writeText(formattedData);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const formatJSX = (data: string) =>
-    data.replace(/></g, ">\n<").replace(/\s{2,}/g, "  ");
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-slate-900 text-white">
+    <div className="min-h-screen bg-slate-900 text-white p-4">
       <motion.h1
-        className="text-4xl font-bold mb-8 text-sky-400"
+        className="text-4xl font-bold text-sky-400 text-center mb-4 mt-6"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
         JSX & JSON Converter
       </motion.h1>
-
-      <motion.div
-        className="w-full max-w-2xl p-6 bg-slate-800 text-gray-200 rounded-lg shadow-2xl space-y-6"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="space-y-4">
-          <textarea
-            className="w-full text-sm p-3 border rounded-lg bg-slate-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            rows={8}
-            placeholder="Enter JSON or JSX here..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-
-          <div className="flex gap-4 items-center justify-between">
-            <select
-              className="p-2 border rounded-lg bg-slate-700 text-gray-200 focus:ring-2 focus:ring-sky-500 cursor-pointer"
-              value={conversionType}
-              onChange={(e) => setConversionType(e.target.value)}
-            >
-              <option value="jsx-to-json">JSX to JSON</option>
-              <option value="json-to-jsx">JSON to JSX</option>
-            </select>
-
-            <button
-              onClick={handleConvert}
-              disabled={!input.trim() || isPending}
-              className={`px-5 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 disabled:opacity-50 transition-all duration-300 ${
-                !input.trim() ? "cursor-not-allowed" : "cursor-pointer"
-              } flex items-center gap-2`}
-            >
-              {isPending ? (
-                <>
-                  <RotateCw className="animate-spin" size={16} />
-                  Converting...
-                </>
-              ) : (
-                "Convert"
-              )}
-            </button>
-          </div>
-        </div>
-
-        {error && (
+      <div className="max-w-6xl mx-auto">
+        <ConversionControls
+          conversionType={conversionType}
+          setConversionType={setConversionType}
+          handleConvert={handleConvert}
+          isPending={isPending}
+          inputValue={input}
+        />
+        {/* {error && (
           <motion.p
-            className="text-rose-300 mt-4 p-3 bg-rose-900 rounded-lg"
+            className="mb-4 p-3 bg-rose-900 text-rose-300 rounded-lg"
             initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            {error}
-          </motion.p>
-        )}
-
-        {output && (
-          <motion.div
-            className="relative mt-6 overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <pre className="p-4 bg-slate-700 text-gray-200 rounded-lg overflow-auto text-sm max-h-80">
-              {conversionType === "json-to-jsx" ? formatJSX(output) : output}
-            </pre>
-            <button
-              onClick={handleCopy}
-              className="absolute top-2 right-5 bg-sky-600 text-white p-2 rounded-lg flex items-center gap-1 hover:bg-sky-700 transition-all duration-300 cursor-pointer"
-            >
-              {copied ? <Check size={12} /> : <Clipboard size={12} />}
-            </button>
-          </motion.div>
-        )}
-      </motion.div>
+            {error}
+          </motion.p>
+        )} */}
+        <div className="flex flex-col md:flex-row gap-4">
+          <EditorSection
+            title="Input"
+            language={conversionType === "jsx-to-json" ? "javascript" : "json"}
+            value={input}
+            onChange={setInput}
+            enableCopy={true}
+            height="500px"
+          />
+          <EditorSection
+            title="Output"
+            language={conversionType === "jsx-to-json" ? "json" : "javascript"}
+            value={output}
+            onChange={setOutput}
+            enableCopy={true}
+            height="500px"
+          />
+        </div>
+      </div>
     </div>
   );
 };
