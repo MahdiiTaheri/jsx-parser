@@ -7,29 +7,34 @@ import ConversionControls from "@/components/ConversionControl";
 import { parseJSXToJSON } from "../parser/index";
 import { convertJSONToJSX } from "../parser/reverse";
 import { toast } from "sonner";
+import { INPUT_PLACEHOLDER, OUTPUT_PLACEHOLDER } from "@/constants";
 
 const ConverterPage: React.FC = () => {
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState<string>(INPUT_PLACEHOLDER);
   const [conversionType, setConversionType] = useState<string>("jsx-to-json");
-  const [output, setOutput] = useState<string>("");
-  // const [error, setError] = useState<string>("");
+  const [output, setOutput] = useState<string>(OUTPUT_PLACEHOLDER);
   const [isPending, setIsPending] = useState<boolean>(false);
 
-  const handleConvert = () => {
+  const handleConvert = async () => {
     if (!input.trim()) return;
     setIsPending(true);
-    // setError("");
     try {
       if (conversionType === "jsx-to-json") {
         const result = parseJSXToJSON(input);
         setOutput(JSON.stringify(result, null, 2));
       } else {
         const json = JSON.parse(input);
-        const result = convertJSONToJSX(json);
+        const result = await convertJSONToJSX(json);
         setOutput(result);
       }
     } catch (err) {
-      if (err instanceof Error) toast.error(err.message || "Conversion failed");
+      if (err instanceof Error)
+        toast.error(err.message || "Conversion failed", {
+          style: {
+            backgroundColor: "oklch(0.936 0.032 17.717)",
+            color: "oklch(0.577 0.245 27.325)",
+          },
+        });
     } finally {
       setIsPending(false);
     }
@@ -38,7 +43,7 @@ const ConverterPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4">
       <motion.h1
-        className="text-4xl font-bold text-sky-400 text-center mb-4 mt-6"
+        className="text-2xl lg:text-4xl font-bold text-sky-400 text-center mb-4 mt-6"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -53,16 +58,6 @@ const ConverterPage: React.FC = () => {
           isPending={isPending}
           inputValue={input}
         />
-        {/* {error && (
-          <motion.p
-            className="mb-4 p-3 bg-rose-900 text-rose-300 rounded-lg"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {error}
-          </motion.p>
-        )} */}
         <div className="flex flex-col md:flex-row gap-4">
           <EditorSection
             title="Input"
@@ -71,6 +66,8 @@ const ConverterPage: React.FC = () => {
             onChange={setInput}
             enableCopy={true}
             height="500px"
+            isPending={isPending}
+            initialPosition="left"
           />
           <EditorSection
             title="Output"
@@ -79,6 +76,8 @@ const ConverterPage: React.FC = () => {
             onChange={setOutput}
             enableCopy={true}
             height="500px"
+            isPending={isPending}
+            initialPosition="right"
           />
         </div>
       </div>

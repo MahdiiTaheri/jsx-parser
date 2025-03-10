@@ -1,12 +1,3 @@
-export interface ComponentConfig {
-  component: string;
-  tagNameProp?: string;
-  defaults?: {
-    as: string;
-  };
-  [key: string]: unknown;
-}
-
 export const componentRegistry: Record<string, ComponentConfig> = {
   Layout: {
     component: "layout",

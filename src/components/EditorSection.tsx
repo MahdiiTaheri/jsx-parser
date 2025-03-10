@@ -6,15 +6,6 @@ import Editor from "@monaco-editor/react";
 import { Clipboard, Check } from "lucide-react";
 import Loading from "./Loading";
 
-interface EditorSectionProps {
-  title: string;
-  language: string;
-  value: string;
-  onChange: (value: string) => void;
-  enableCopy?: boolean;
-  height?: string;
-}
-
 const EditorSection: React.FC<EditorSectionProps> = ({
   title,
   language,
@@ -22,6 +13,8 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   onChange,
   enableCopy = false,
   height = "500px",
+  isPending,
+  initialPosition,
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -33,7 +26,20 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   };
 
   return (
-    <div className="flex-1 border border-slate-700 rounded-lg relative">
+    <motion.div
+      initial={{
+        x:
+          initialPosition === "left"
+            ? -50
+            : initialPosition === "right"
+            ? 50
+            : 0,
+        opacity: 0,
+      }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="flex-1 border border-slate-700 rounded-lg relative shadow-2xl"
+    >
       <div className="p-2 border-b border-slate-700 bg-slate-800 text-sm">
         {title}
       </div>
@@ -57,13 +63,14 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           minimap: { enabled: false },
           fontSize: 16,
           autoClosingBrackets: "always",
-          autoIndent: "advanced",
           automaticLayout: true,
-          trimAutoWhitespace: true,
+          readOnly: isPending,
+          formatOnPaste: true,
+          formatOnType: true,
         }}
         loading={<Loading />}
       />
-    </div>
+    </motion.div>
   );
 };
 

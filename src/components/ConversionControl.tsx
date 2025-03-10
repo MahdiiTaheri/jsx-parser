@@ -1,13 +1,5 @@
 import { motion } from "motion/react";
 
-interface ConversionControlsProps {
-  conversionType: string;
-  setConversionType: (value: string) => void;
-  handleConvert: () => void;
-  isPending: boolean;
-  inputValue: string;
-}
-
 const ConversionControls: React.FC<ConversionControlsProps> = ({
   conversionType,
   setConversionType,
@@ -16,13 +8,16 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
   inputValue,
 }) => {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4"
+    >
       <select
-        className="p-2 bg-slate-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer"
+        className="max-w-fit p-2 bg-slate-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer"
         value={conversionType}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          setConversionType(e.target.value)
-        }
+        onChange={(e) => setConversionType(e.target.value)}
       >
         <option value="jsx-to-json">JSX to JSON</option>
         <option value="json-to-jsx">JSON to JSX</option>
@@ -34,7 +29,7 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
       >
         {isPending ? "Converting..." : "Convert"}
       </button>
-    </div>
+    </motion.div>
   );
 };
 

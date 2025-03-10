@@ -62,7 +62,7 @@ function processDirectory(
 reverseCommand
   .argument("<input>", "Path to JSON file or directory of JSON files")
   .option("-o, --output <dir>", "Output directory", "results/jsx-output")
-  .option("-e, --extension <ext>", "Output extension (jsx/tsx)", "jsx")
+  .option("-e, --extension <ext>", "Output extension (jsx/tsx)", "tsx")
   .action((inputPath: string, options) => {
     const outputDir = options.output;
     const extension = options.extension;

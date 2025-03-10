@@ -1,31 +1,35 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export const getTagName = (
-  config: any,
-  props: any,
+  config: TagNameConfig,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  props: Record<string, any>,
   componentName: string
 ): string =>
   config.tagName ||
   (config.tagNameProp
-    ? props[config.tagNameProp] || config.defaults?.tagName
+    ? props[config.tagNameProp] || config.defaults?.as
     : componentName.toLowerCase());
 
 export const processAttributes = (
-  attributes: any[]
-): { id: string | null; props: any } => {
+  attributes: Attribute[]
+): {
+  id: string | null;
+  props: Record<string, string | number | undefined>;
+} => {
   let id: string | null = null;
-  const props: any = {};
+  const props: Record<string, string | number | undefined> = {};
+
   for (const attr of attributes) {
     const {
       name: { name },
       value,
     } = attr;
-    let val = value?.value ?? value?.expression?.value;
+    let val: string | number | undefined =
+      value?.value ?? value?.expression?.value;
     if (typeof val === "string" && !isNaN(Number(val))) {
       val = parseInt(val, 10);
     }
     if (name === "id") {
-      id = val;
+      id = val as string;
       continue;
     }
     props[name] = val;
@@ -33,7 +37,7 @@ export const processAttributes = (
   return { id, props };
 };
 
-export const processChildren = (children: any[]): string => {
+export const processChildren = (children: JSXChild[]): string => {
   let text = "";
   for (const child of children) {
     if (child.type === "JSXText") {
