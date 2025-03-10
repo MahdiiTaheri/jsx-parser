@@ -25,13 +25,17 @@ function ensureOutputDirectory(outputDir: string) {
   }
 }
 
-function processFile(inputPath: string, outputDir: string, extension: string) {
+async function processFile(
+  inputPath: string,
+  outputDir: string,
+  extension: string
+) {
   try {
     if (!inputPath.endsWith(".json"))
       throw new Error(`Invalid file type: ${inputPath} must be a .json file`);
 
     const data = readFileSync(inputPath, "utf8");
-    const jsx = convertJSONToJSX(JSON.parse(data));
+    const jsx = await convertJSONToJSX(JSON.parse(data));
 
     const baseName = basename(inputPath, extname(inputPath));
     const outputPath = join(outputDir, `${baseName}.${extension}`);

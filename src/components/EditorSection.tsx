@@ -32,8 +32,8 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           initialPosition === "left"
             ? -50
             : initialPosition === "right"
-            ? 50
-            : 0,
+              ? 50
+              : 0,
         opacity: 0,
       }}
       animate={{ x: 0, opacity: 1 }}
@@ -67,6 +67,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           readOnly: isPending,
           formatOnPaste: true,
           formatOnType: true,
+          wordWrap: "bounded",
         }}
         loading={<Loading />}
       />
