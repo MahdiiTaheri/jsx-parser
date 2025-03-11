@@ -112,12 +112,6 @@ const ConverterPage: React.FC = () => {
             initialPosition="right"
           />
         </div>
-        <button
-          onClick={handleSendJsonQuery}
-          className=" mt-5 px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
-        >
-          send query
-        </button>
       </div>
     </div>
   );
