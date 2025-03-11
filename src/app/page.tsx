@@ -9,11 +9,14 @@ import { convertJSONToJSX } from "../parser/reverse";
 import { toast } from "sonner";
 import { INPUT_PLACEHOLDER, OUTPUT_PLACEHOLDER } from "@/constants";
 
+const URL = "https://sdui.kalabazzar.ir/api/pages";
+
 const ConverterPage: React.FC = () => {
   const [input, setInput] = useState<string>(INPUT_PLACEHOLDER);
   const [conversionType, setConversionType] = useState<string>("jsx-to-json");
   const [output, setOutput] = useState<string>(OUTPUT_PLACEHOLDER);
   const [isPending, setIsPending] = useState<boolean>(false);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const handleConvert = async () => {
     if (!input.trim()) return;
@@ -39,7 +42,33 @@ const ConverterPage: React.FC = () => {
       setIsPending(false);
     }
   };
+  const handleSendJsonQuery = async () => {
+    setIsCreating(true);
+    try {
+      const response = await fetch(`${URL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ output }),
+      });
 
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const data = await response.json();
+      console.log("Response data:", data);
+    } catch (error) {
+      console.log("Error sending JSON query:", error);
+      toast.error("Failed to create page", {
+        style: {
+          backgroundColor: "oklch(0.936 0.032 17.717)",
+          color: "oklch(0.577 0.245 27.325)",
+        },
+      });
+    } finally {
+      setIsCreating(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4">
       <motion.h1
@@ -57,7 +86,10 @@ const ConverterPage: React.FC = () => {
           handleConvert={handleConvert}
           isPending={isPending}
           inputValue={input}
+          handleSendJsonQuery={handleSendJsonQuery}
+          isCreating={isCreating}
         />
+
         <div className="flex flex-col md:flex-row gap-4">
           <EditorSection
             title="Input"
