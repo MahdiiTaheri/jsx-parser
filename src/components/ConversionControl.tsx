@@ -7,7 +7,8 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
   isPending,
   inputValue,
   handleSendJsonQuery,
-  isCreating,
+  isUpdating,
+  apiUrl,
 }) => {
   return (
     <motion.div
@@ -27,10 +28,10 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
       <div className="flex items-center gap-4">
         <button
           onClick={handleSendJsonQuery}
-          disabled={isCreating}
+          disabled={!apiUrl?.trim() || isUpdating}
           className="px-5 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
         >
-          {isCreating ? "Creating..." : "Create page"}
+          {isUpdating ? "Updating..." : "Update page"}
         </button>
         <button
           onClick={handleConvert}

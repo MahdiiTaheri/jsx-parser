@@ -1,74 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion } from "motion/react";
 import EditorSection from "@/components/EditorSection";
 import ConversionControls from "@/components/ConversionControl";
-import { parseJSXToJSON } from "../parser/index";
-import { convertJSONToJSX } from "../parser/reverse";
-import { toast } from "sonner";
-import { INPUT_PLACEHOLDER, OUTPUT_PLACEHOLDER } from "@/constants";
+import { INPUT_PLACEHOLDER } from "@/constants";
+import { useConverter } from "@/hooks/useConverter";
+import { usePageUpdate } from "@/hooks/usePageUpdate";
 
-const URL = "https://sdui.kalabazzar.ir/api/pages";
+const DEFAULT_URL =
+  "https://sdui.kalabazzar.ir/api/pages?path=admin:/dashboard/test";
 
 const ConverterPage: React.FC = () => {
+  const [apiUrl, setApiUrl] = useState<string>(DEFAULT_URL);
   const [input, setInput] = useState<string>(INPUT_PLACEHOLDER);
   const [conversionType, setConversionType] = useState<string>("jsx-to-json");
-  const [output, setOutput] = useState<string>(OUTPUT_PLACEHOLDER);
-  const [isPending, setIsPending] = useState<boolean>(false);
-  const [isCreating, setIsCreating] = useState<boolean>(false);
 
-  const handleConvert = async () => {
-    if (!input.trim()) return;
-    setIsPending(true);
-    try {
-      if (conversionType === "jsx-to-json") {
-        const result = parseJSXToJSON(input);
-        setOutput(JSON.stringify(result, null, 2));
-      } else {
-        const json = JSON.parse(input);
-        const result = await convertJSONToJSX(json);
-        setOutput(result);
-      }
-    } catch (err) {
-      if (err instanceof Error)
-        toast.error(err.message || "Conversion failed", {
-          style: {
-            backgroundColor: "oklch(0.936 0.032 17.717)",
-            color: "oklch(0.577 0.245 27.325)",
-          },
-        });
-    } finally {
-      setIsPending(false);
-    }
-  };
-  const handleSendJsonQuery = async () => {
-    setIsCreating(true);
-    try {
-      const response = await fetch(`${URL}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ output }),
-      });
+  const { output, convert, isConverting } = useConverter();
+  const { updatePage, isUpdating } = usePageUpdate(apiUrl, output);
 
-      if (!response.ok) throw new Error("Network response was not ok");
+  const handleConvert = useCallback(() => {
+    convert(input, conversionType);
+  }, [input, conversionType, convert]);
 
-      const data = await response.json();
-      console.log("Response data:", data);
-    } catch (error) {
-      console.log("Error sending JSON query:", error);
-      toast.error("Failed to create page", {
-        style: {
-          backgroundColor: "oklch(0.936 0.032 17.717)",
-          color: "oklch(0.577 0.245 27.325)",
-        },
-      });
-    } finally {
-      setIsCreating(false);
-    }
-  };
+  const handleSendJsonQuery = useCallback(() => {
+    updatePage();
+  }, [updatePage]);
+
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4">
       <motion.h1
@@ -79,17 +37,34 @@ const ConverterPage: React.FC = () => {
       >
         JSX & JSON Converter
       </motion.h1>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="max-w-6xl mx-auto mb-4"
+      >
+        <label htmlFor="apiUrl" className="block mb-1">
+          Route
+        </label>
+        <input
+          id="apiUrl"
+          type="text"
+          value={apiUrl}
+          onChange={(e) => setApiUrl(e.target.value)}
+          className="w-full max-w-lg p-2 rounded-lg bg-slate-800 text-white"
+        />
+      </motion.div>
       <div className="max-w-6xl mx-auto">
         <ConversionControls
           conversionType={conversionType}
           setConversionType={setConversionType}
           handleConvert={handleConvert}
-          isPending={isPending}
+          isPending={isConverting}
           inputValue={input}
           handleSendJsonQuery={handleSendJsonQuery}
-          isCreating={isCreating}
+          isUpdating={isUpdating}
+          apiUrl={apiUrl}
         />
-
         <div className="flex flex-col md:flex-row gap-4">
           <EditorSection
             title="Input"
@@ -98,17 +73,17 @@ const ConverterPage: React.FC = () => {
             onChange={setInput}
             enableCopy={true}
             height="500px"
-            isPending={isPending}
+            isPending={isConverting}
             initialPosition="left"
           />
           <EditorSection
             title="Output"
             language={conversionType === "jsx-to-json" ? "json" : "javascript"}
             value={output}
-            onChange={setOutput}
+            onChange={() => {}}
             enableCopy={true}
             height="500px"
-            isPending={isPending}
+            isPending={isConverting}
             initialPosition="right"
           />
         </div>

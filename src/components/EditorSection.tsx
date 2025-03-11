@@ -37,7 +37,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
         opacity: 0,
       }}
       animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
       className="flex-1  border-slate-700 rounded-lg relative"
     >
       <div className="p-2 border-b border-slate-700 bg-slate-800 text-sm">
