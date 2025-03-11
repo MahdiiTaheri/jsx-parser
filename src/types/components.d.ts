@@ -15,4 +15,6 @@ interface ConversionControlsProps {
   handleConvert: () => void;
   isPending: boolean;
   inputValue: string;
+  handleSendJsonQuery: () => void;
+  isCreating?: boolean;
 }

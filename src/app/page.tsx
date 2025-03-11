@@ -16,6 +16,7 @@ const ConverterPage: React.FC = () => {
   const [conversionType, setConversionType] = useState<string>("jsx-to-json");
   const [output, setOutput] = useState<string>(OUTPUT_PLACEHOLDER);
   const [isPending, setIsPending] = useState<boolean>(false);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const handleConvert = async () => {
     if (!input.trim()) return;
@@ -42,6 +43,7 @@ const ConverterPage: React.FC = () => {
     }
   };
   const handleSendJsonQuery = async () => {
+    setIsCreating(true);
     try {
       const response = await fetch(`${URL}`, {
         method: "POST",
@@ -51,14 +53,20 @@ const ConverterPage: React.FC = () => {
         body: JSON.stringify({ output }),
       });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      if (!response.ok) throw new Error("Network response was not ok");
 
       const data = await response.json();
       console.log("Response data:", data);
     } catch (error) {
-      console.error("Error sending JSON query:", error);
+      console.log("Error sending JSON query:", error);
+      toast.error("Failed to create page", {
+        style: {
+          backgroundColor: "oklch(0.936 0.032 17.717)",
+          color: "oklch(0.577 0.245 27.325)",
+        },
+      });
+    } finally {
+      setIsCreating(false);
     }
   };
   return (
@@ -78,15 +86,11 @@ const ConverterPage: React.FC = () => {
           handleConvert={handleConvert}
           isPending={isPending}
           inputValue={input}
+          handleSendJsonQuery={handleSendJsonQuery}
+          isCreating={isCreating}
         />
-         <button
-          onClick={handleSendJsonQuery}
-          className=" mt-5 px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
-        >
-          send query
-        </button>
+
         <div className="flex flex-col md:flex-row gap-4">
-          
           <EditorSection
             title="Input"
             language={conversionType === "jsx-to-json" ? "javascript" : "json"}

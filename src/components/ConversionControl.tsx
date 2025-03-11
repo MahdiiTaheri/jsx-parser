@@ -6,6 +6,8 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
   handleConvert,
   isPending,
   inputValue,
+  handleSendJsonQuery,
+  isCreating,
 }) => {
   return (
     <motion.div
@@ -22,13 +24,22 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
         <option value="jsx-to-json">JSX to JSON</option>
         <option value="json-to-jsx">JSON to JSX</option>
       </select>
-      <button
-        onClick={handleConvert}
-        disabled={!inputValue.trim() || isPending}
-        className="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
-      >
-        {isPending ? "Converting..." : "Convert"}
-      </button>
+      <div className="flex items-center gap-4">
+        <button
+          onClick={handleSendJsonQuery}
+          disabled={isCreating}
+          className="mt-5 px-5 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
+        >
+          {isCreating ? "Creating..." : "Create page"}
+        </button>
+        <button
+          onClick={handleConvert}
+          disabled={!inputValue.trim() || isPending}
+          className="mt-5 px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
+        >
+          {isPending ? "Converting..." : "Convert"}
+        </button>
+      </div>
     </motion.div>
   );
 };
