@@ -9,6 +9,8 @@ import { convertJSONToJSX } from "../parser/reverse";
 import { toast } from "sonner";
 import { INPUT_PLACEHOLDER, OUTPUT_PLACEHOLDER } from "@/constants";
 
+const URL = "https://sdui.kalabazzar.ir/api/pages";
+
 const ConverterPage: React.FC = () => {
   const [input, setInput] = useState<string>(INPUT_PLACEHOLDER);
   const [conversionType, setConversionType] = useState<string>("jsx-to-json");
@@ -39,7 +41,26 @@ const ConverterPage: React.FC = () => {
       setIsPending(false);
     }
   };
+  const handleSendJsonQuery = async () => {
+    try {
+      const response = await fetch(`${URL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ output }),
+      });
 
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Response data:", data);
+    } catch (error) {
+      console.error("Error sending JSON query:", error);
+    }
+  };
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4">
       <motion.h1
@@ -58,7 +79,14 @@ const ConverterPage: React.FC = () => {
           isPending={isPending}
           inputValue={input}
         />
+         <button
+          onClick={handleSendJsonQuery}
+          className=" mt-5 px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
+        >
+          send query
+        </button>
         <div className="flex flex-col md:flex-row gap-4">
+          
           <EditorSection
             title="Input"
             language={conversionType === "jsx-to-json" ? "javascript" : "json"}
@@ -80,6 +108,12 @@ const ConverterPage: React.FC = () => {
             initialPosition="right"
           />
         </div>
+        <button
+          onClick={handleSendJsonQuery}
+          className=" mt-5 px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
+        >
+          send query
+        </button>
       </div>
     </div>
   );
