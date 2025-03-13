@@ -8,7 +8,12 @@ import {
   isJSXIdentifier,
 } from "@babel/types";
 import { componentRegistry, defaultComponentConfig } from "./registry";
-import { getTagName, processAttributes, processChildren } from "./utils";
+import {
+  getTagName,
+  parseObjectExpression,
+  processAttributes,
+  processChildren,
+} from "./utils";
 
 export function parseJSXToJSON(jsx: string, layout: string = "dashboard") {
   if (typeof jsx !== "string")
@@ -63,6 +68,8 @@ export function parseJSXToJSON(jsx: string, layout: string = "dashboard") {
                 expr.type === "NumericLiteral"
               ) {
                 attrValue = { value: expr.value };
+              } else if (expr.type === "ObjectExpression") {
+                attrValue = { value: parseObjectExpression(expr) };
               }
             }
           }

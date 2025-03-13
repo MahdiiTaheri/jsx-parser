@@ -8,6 +8,8 @@ export const componentRegistry: Record<string, ComponentConfig> = {
   Button: { component: "button" },
   Icon: { component: "icon" },
   Divider: { component: "divider" },
+  Form: { component: "form" },
+  Input: { component: "input" },
   // Additional components can be added here.
 };
 

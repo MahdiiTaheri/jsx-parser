@@ -1,7 +1,7 @@
 interface AttributeValue {
-  value?: string | number;
+  value?: string | number | Record<string, unknown>;
   expression?: {
-    value: string | number;
+    value: string | number | Record<string, unknown>;
   };
 }
 

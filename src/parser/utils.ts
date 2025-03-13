@@ -1,3 +1,5 @@
+import { ObjectExpression } from "@babel/types";
+
 export const getTagName = (
   config: TagNameConfig,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,18 +15,18 @@ export const processAttributes = (
   attributes: Attribute[]
 ): {
   id: string | null;
-  props: Record<string, string | number | undefined>;
+  props: Record<string, unknown>;
 } => {
   let id: string | null = null;
-  const props: Record<string, string | number | undefined> = {};
+  const props: Record<string, unknown> = {};
 
   for (const attr of attributes) {
     const {
       name: { name },
       value,
     } = attr;
-    let val: string | number | undefined =
-      value?.value ?? value?.expression?.value;
+    let val = value?.value ?? value?.expression?.value;
+    // Optionally, parse numeric strings to numbers
     if (typeof val === "string" && !isNaN(Number(val))) {
       val = parseInt(val, 10);
     }
@@ -47,3 +49,34 @@ export const processChildren = (children: JSXChild[]): string => {
   }
   return text;
 };
+
+export function parseObjectExpression(expr: ObjectExpression) {
+  const obj: Record<string, unknown> = {};
+  expr.properties.forEach((prop) => {
+    if (prop.type === "ObjectProperty") {
+      let key: string;
+      if (prop.key.type === "Identifier") {
+        key = prop.key.name;
+      } else if (prop.key.type === "StringLiteral") {
+        key = prop.key.value;
+      } else {
+        key = "unknown";
+      }
+      let value;
+      if (prop.value.type === "StringLiteral") {
+        value = prop.value.value;
+      } else if (prop.value.type === "NumericLiteral") {
+        value = prop.value.value;
+      } else if (prop.value.type === "BooleanLiteral") {
+        value = prop.value.value;
+      } else if (prop.value.type === "ObjectExpression") {
+        value = parseObjectExpression(prop.value);
+      } else {
+        // Optionally add more type handling here
+        value = null;
+      }
+      obj[key] = value;
+    }
+  });
+  return obj;
+}
