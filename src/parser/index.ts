@@ -57,6 +57,7 @@ export function parseJSXToJSON(jsx: string, layout: string = "dashboard") {
           } else {
             attrName = `${attr.name.namespace.name}:${attr.name.name.name}`;
           }
+          console.log("Processing attribute:", attrName, attr.value);
           let attrValue;
           if (attr.value) {
             if (attr.value.type === "StringLiteral") {
@@ -64,8 +65,13 @@ export function parseJSXToJSON(jsx: string, layout: string = "dashboard") {
             } else if (attr.value.type === "JSXExpressionContainer") {
               const expr = attr.value.expression;
               if (
+                expr.type === "NumericLiteral" ||
+                expr.type === "DecimalLiteral"
+              ) {
+                attrValue = { value: Number(expr.value) };
+              } else if (
                 expr.type === "StringLiteral" ||
-                expr.type === "NumericLiteral"
+                expr.type === "BooleanLiteral"
               ) {
                 attrValue = { value: expr.value };
               } else if (expr.type === "ObjectExpression") {

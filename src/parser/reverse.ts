@@ -1,25 +1,3 @@
-import prettier from "prettier";
-import babelPlugin from "prettier/plugins/babel";
-import estreePlugin from "prettier/plugins/estree";
-
-const formatJSX = async (rawCode: string, indentSize: number = 2) => {
-  try {
-    return await prettier.format(rawCode, {
-      parser: "babel",
-      plugins: [babelPlugin, estreePlugin],
-      printWidth: 80,
-      tabWidth: indentSize,
-      singleQuote: true,
-      jsxSingleQuote: true,
-      trailingComma: "es5",
-      arrowParens: "always",
-    });
-  } catch (error) {
-    console.error("Failed to format JSX:", error);
-    return rawCode;
-  }
-};
-
 export async function convertJSONToJSX(
   json: JsonStructure,
   indentSize: number = 2
@@ -34,6 +12,7 @@ export async function convertJSONToJSX(
 
   const roots: ParsedNode[] = [];
 
+  // Build hierarchy based on parent_id
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
     if (node.parent_id) {
@@ -68,7 +47,7 @@ ${jsxNodes}
 export default ConvertedComponent;
 `;
 
-  return formatJSX(rawCode);
+  return rawCode;
 }
 
 function renderNode(
@@ -82,15 +61,25 @@ function renderNode(
 
   const { children, ...restProps } = node.props ?? {};
   const attributesArr: string[] = [];
-  if (node.id) attributesArr.push(`id="${node.id}"`);
+
+  if (node.id) {
+    attributesArr.push(`id="${node.id}"`);
+  }
 
   for (const [key, value] of Object.entries(restProps)) {
-    if (typeof value === "number" || typeof value === "boolean") {
+    if (typeof value === "number") {
+      const formattedNumber =
+        value % 1 === 0 ? value : parseFloat(value.toFixed(10));
+      attributesArr.push(`${key}={${formattedNumber}}`);
+    } else if (typeof value === "boolean") {
       attributesArr.push(`${key}={${value}}`);
-    } else {
+    } else if (typeof value === "object" && value !== null) {
+      attributesArr.push(`${key}={${JSON.stringify(value)}}`);
+    } else if (typeof value === "string") {
       attributesArr.push(`${key}="${value}"`);
     }
   }
+
   const attrStr = attributesArr.length > 0 ? " " + attributesArr.join(" ") : "";
 
   const textContent = children && typeof children === "string" ? children : "";

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import Editor from "@monaco-editor/react";
+import Editor, { type OnMount } from "@monaco-editor/react";
 import { Clipboard, Check } from "lucide-react";
 import Loading from "./Loading";
 
@@ -15,6 +15,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   height = "500px",
   isPending,
   initialPosition,
+  shouldFormatOnChange,
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -25,6 +26,13 @@ const EditorSection: React.FC<EditorSectionProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleEditorDidMount: OnMount = (editor) => {
+    editor.onDidChangeModelContent(() => {
+      const formatAction = editor.getAction("editor.action.formatDocument");
+      if (formatAction) formatAction.run();
+    });
+  };
+
   return (
     <motion.div
       initial={{
@@ -32,13 +40,13 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           initialPosition === "left"
             ? -50
             : initialPosition === "right"
-              ? 50
-              : 0,
+            ? 50
+            : 0,
         opacity: 0,
       }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="flex-1  border-slate-700 rounded-lg relative"
+      className="flex-1 border-slate-700 rounded-lg relative"
     >
       <div className="p-2 border-b border-slate-700 bg-slate-800 text-sm">
         {title}
@@ -66,9 +74,9 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           automaticLayout: true,
           readOnly: isPending,
           formatOnPaste: true,
-          formatOnType: true,
           wordWrap: "bounded",
         }}
+        onMount={shouldFormatOnChange ? handleEditorDidMount : undefined}
         loading={<Loading />}
       />
     </motion.div>

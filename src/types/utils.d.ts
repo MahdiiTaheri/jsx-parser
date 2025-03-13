@@ -1,5 +1,5 @@
 interface AttributeValue {
-  value?: string | number | Record<string, unknown>;
+  value?: string | number | boolean | Record<string, unknown>;
   expression?: {
     value: string | number | Record<string, unknown>;
   };

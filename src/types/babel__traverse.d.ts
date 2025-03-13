@@ -2,6 +2,9 @@ declare module "@babel/traverse" {
   import * as t from "@babel/types";
 
   export class NodePath<T = t.Node> {
+    replaceWith(arg0: { type: string; value: any }) {
+      throw new Error("Method not implemented.");
+    }
     public node: T;
     // You can add additional members as needed.
   }

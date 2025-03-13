@@ -7,6 +7,7 @@ interface EditorSectionProps {
   height?: string;
   isPending?: boolean;
   initialPosition?: "left" | "right";
+  shouldFormatOnChange?: boolean;
 }
 
 interface ConversionControlsProps {

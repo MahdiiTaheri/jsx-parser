@@ -26,10 +26,7 @@ export const processAttributes = (
       value,
     } = attr;
     let val = value?.value ?? value?.expression?.value;
-    // Optionally, parse numeric strings to numbers
-    if (typeof val === "string" && !isNaN(Number(val))) {
-      val = parseInt(val, 10);
-    }
+    if (typeof val === "number") val = Number(val);
     if (name === "id") {
       id = val as string;
       continue;

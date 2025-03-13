@@ -75,6 +75,7 @@ const ConverterPage: React.FC = () => {
             height="500px"
             isPending={isConverting}
             initialPosition="left"
+            shouldFormatOnChange={false}
           />
           <EditorSection
             title="Output"
@@ -85,6 +86,7 @@ const ConverterPage: React.FC = () => {
             height="500px"
             isPending={isConverting}
             initialPosition="right"
+            shouldFormatOnChange={true}
           />
         </div>
       </div>
