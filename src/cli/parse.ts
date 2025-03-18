@@ -8,6 +8,7 @@ import {
   readFileSync,
   writeFileSync,
   readdirSync,
+  realpathSync,
 } from "fs";
 import { basename, join, extname, resolve, relative, isAbsolute } from "path";
 import { platform } from "os";
@@ -21,9 +22,15 @@ const SAFE_BASE_DIR = process.cwd();
 
 // Helper function to check if 'child' is inside 'parent'
 function isPathInside(child: string, parent: string): boolean {
-  const relativePath = relative(parent, child);
-  // If the relative path starts with ".." or is absolute, then it's outside.
-  return !relativePath.startsWith("..") && !isAbsolute(relativePath);
+  try {
+    const realChild = realpathSync(child);
+    const realParent = realpathSync(parent);
+    // Ensure the real child path starts with the real parent path plus a separator to prevent false-positives
+    return realChild.startsWith(realParent + require("path").sep);
+  } catch (error) {
+    console.error(`Error resolving paths: ${(error as Error).message}`);
+    return false;
+  }
 }
 
 function ensureOutputDirectory(
