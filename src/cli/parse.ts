@@ -9,33 +9,47 @@ import {
   writeFileSync,
   readdirSync,
 } from "fs";
-import { basename, join, extname, resolve, relative } from "path";
+import { basename, join, extname, resolve, relative, isAbsolute } from "path";
 import { platform } from "os";
 import { watch } from "chokidar";
 import { parseJSXToJSON } from "../parser/index";
 
 const parseCommand = new Command("jsxToJson");
 
-// Helper function to check if 'child' is within 'parent' directory.
+// Define a safe base directory (for example, the current working directory).
+const SAFE_BASE_DIR = process.cwd();
+
+// Helper function to check if 'child' is inside 'parent'
 function isPathInside(child: string, parent: string): boolean {
   const relativePath = relative(parent, child);
-  // If the relative path starts with ".." or is absolute, it's outside of 'parent'.
-  return !!relativePath && !relativePath.startsWith("..") && !resolve(relativePath).startsWith("..");
+  // If the relative path starts with ".." or is absolute, then it's outside.
+  return !relativePath.startsWith("..") && !isAbsolute(relativePath);
 }
 
-function ensureOutputDirectory(outputDir: string) {
+function ensureOutputDirectory(
+  outputDir: string,
+  safeBase: string = SAFE_BASE_DIR
+) {
   try {
-    if (!existsSync(outputDir)) {
-      console.log(`📂 Creating output directory: ${outputDir}`);
-      mkdirSync(outputDir, { recursive: true });
+    const resolvedOutputDir = resolve(outputDir);
+    if (!isPathInside(resolvedOutputDir, resolve(safeBase))) {
+      console.error(
+        `❌ Unsafe output directory: ${resolvedOutputDir} is outside of allowed directory ${safeBase}`
+      );
+      process.exit(1);
+    }
+
+    if (!existsSync(resolvedOutputDir)) {
+      console.log(`📂 Creating output directory: ${resolvedOutputDir}`);
+      mkdirSync(resolvedOutputDir, { recursive: true });
     }
 
     if (platform() === "linux") {
-      const stats = statSync(outputDir);
+      const stats = statSync(resolvedOutputDir);
       if (!(stats.mode & 0o222)) {
-        console.log(`🔧 Fixing permissions for ${outputDir}...`);
-        chmodSync(outputDir, stats.mode | 0o222);
-        console.log(`✅ Permissions fixed for ${outputDir}`);
+        console.log(`🔧 Fixing permissions for ${resolvedOutputDir}...`);
+        chmodSync(resolvedOutputDir, stats.mode | 0o222);
+        console.log(`✅ Permissions fixed for ${resolvedOutputDir}`);
       }
     }
   } catch (error) {
@@ -46,13 +60,16 @@ function ensureOutputDirectory(outputDir: string) {
   }
 }
 
-function ensureExecutablePermissions(filePath: string, safeBase: string = process.cwd()) {
-  // Resolve the file path to an absolute path.
+function ensureExecutablePermissions(
+  filePath: string,
+  safeBase: string = SAFE_BASE_DIR
+) {
   const resolvedPath = resolve(filePath);
-  
-  // Check that the resolved path is within the safe base directory.
+
   if (!isPathInside(resolvedPath, resolve(safeBase))) {
-    console.error(`❌ Unsafe file path: ${resolvedPath} is outside of allowed directory ${safeBase}`);
+    console.error(
+      `❌ Unsafe file path: ${resolvedPath} is outside of allowed directory ${safeBase}`
+    );
     return;
   }
 
