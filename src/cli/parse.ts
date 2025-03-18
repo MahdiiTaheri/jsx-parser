@@ -71,11 +71,23 @@ function ensureExecutablePermissions(
   filePath: string,
   safeBase: string = SAFE_BASE_DIR
 ) {
-  const resolvedPath = resolve(filePath);
-
-  if (!isPathInside(resolvedPath, resolve(safeBase))) {
+  let realFilePath: string;
+  try {
+    realFilePath = realpathSync(filePath);
+  } catch (error) {
     console.error(
-      `❌ Unsafe file path: ${resolvedPath} is outside of allowed directory ${safeBase}`
+      `❌ Failed to resolve real path for ${filePath}: ${
+        (error as Error).message
+      }`
+    );
+    return;
+  }
+
+  const safeBaseReal = realpathSync(safeBase);
+  // Validate that the real file path is inside the canonical safe base directory.
+  if (!realFilePath.startsWith(safeBaseReal + require("path").sep)) {
+    console.error(
+      `❌ Unsafe file path: ${realFilePath} is outside of allowed directory ${safeBaseReal}`
     );
     return;
   }
@@ -83,11 +95,11 @@ function ensureExecutablePermissions(
   if (platform() !== "linux") return;
 
   try {
-    const stats = statSync(resolvedPath);
+    const stats = statSync(realFilePath);
     if (!(stats.mode & 0o111)) {
-      console.log(`🔧 Fixing permissions for ${resolvedPath}...`);
-      chmodSync(resolvedPath, stats.mode | 0o111);
-      console.log(`✅ Permissions fixed for ${resolvedPath}`);
+      console.log(`🔧 Fixing permissions for ${realFilePath}...`);
+      chmodSync(realFilePath, stats.mode | 0o111);
+      console.log(`✅ Permissions fixed for ${realFilePath}`);
     }
   } catch (error) {
     if (error instanceof Error)
