@@ -8,7 +8,6 @@ import {
   readFileSync,
   writeFileSync,
   readdirSync,
-  realpathSync,
 } from "fs";
 import {
   basename,
@@ -53,13 +52,10 @@ function isPathInside(child: string, parent: string): boolean {
 function ensureOutputDirectory(outputDir: string) {
   const validatedDir = validateSafePath(outputDir, "output directory");
 
-  if (!existsSync(validatedDir)) {
+  if (!existsSync(validatedDir))
     mkdirSync(validatedDir, { recursive: true, mode: 0o755 });
-  }
 
-  if (platform() === "linux") {
-    chmodSync(validatedDir, 0o755); // Explicit secure permissions
-  }
+  if (platform() === "linux") chmodSync(validatedDir, 0o755);
 }
 
 // Updated processing functions with path validation
@@ -103,33 +99,26 @@ function processDirectory(dirPath: string, outputDir: string, layout: string) {
   });
 }
 
-// Updated command action
 parseCommand
   .argument("<input>", "Path to TSX/JSX file or directory")
   .option("-o, --output <dir>", "Output directory", "result/json-output")
   .option("-l, --layout <type>", "Set layout type", "default")
   .option("-w, --watch", "Watch for changes")
   .action((inputPath: string, options) => {
-    // Validate input path first
     const validatedInput = validateSafePath(inputPath, "input");
 
-    // Validate output directory
     ensureOutputDirectory(options.output);
 
-    // Initial processing
-    if (statSync(validatedInput).isDirectory()) {
+    if (statSync(validatedInput).isDirectory())
       processDirectory(validatedInput, options.output, options.layout);
-    } else {
-      processFile(validatedInput, options.output, options.layout);
-    }
+    else processFile(validatedInput, options.output, options.layout);
 
-    // Watch mode with validated paths
     if (options.watch) {
       const watcher = watch(validatedInput, {
         persistent: true,
         ignoreInitial: true,
         awaitWriteFinish: true,
-        followSymlinks: false, // Important security setting
+        followSymlinks: false,
       });
 
       watcher.on("change", (changedPath) => {
