@@ -84,8 +84,10 @@ function ensureExecutablePermissions(
   }
 
   const safeBaseReal = realpathSync(safeBase);
-  // Validate that the real file path is inside the canonical safe base directory.
-  if (!realFilePath.startsWith(safeBaseReal + require("path").sep)) {
+  const rel = relative(safeBaseReal, realFilePath);
+
+  // If the relative path starts with '..' or is absolute, realFilePath lies outside safeBaseReal.
+  if (rel.startsWith("..") || resolve(rel) === rel) {
     console.error(
       `❌ Unsafe file path: ${realFilePath} is outside of allowed directory ${safeBaseReal}`
     );
