@@ -10,161 +10,131 @@ import {
   readdirSync,
   realpathSync,
 } from "fs";
-import { basename, join, extname, resolve, relative, isAbsolute } from "path";
+import {
+  basename,
+  join,
+  extname,
+  resolve,
+  relative,
+  isAbsolute,
+  sep,
+} from "path";
 import { platform } from "os";
 import { watch } from "chokidar";
 import { parseJSXToJSON } from "../parser/index";
 
 const parseCommand = new Command("jsxToJson");
+const SAFE_BASE_DIR = resolve(process.cwd()); // Ensure absolute path
 
-// Define a safe base directory (for example, the current working directory).
-const SAFE_BASE_DIR = process.cwd();
+// Unified path validation function
+function validateSafePath(userPath: string, context: string = "path") {
+  const resolvedPath = resolve(userPath);
 
-// Helper function to check if 'child' is inside 'parent'
+  if (!isPathInside(resolvedPath, SAFE_BASE_DIR)) {
+    console.error(
+      `❌ Unsafe ${context}: ${resolvedPath} is outside allowed directory`
+    );
+    process.exit(1);
+  }
+
+  return resolvedPath;
+}
+
+// Enhanced path containment check
 function isPathInside(child: string, parent: string): boolean {
-  try {
-    const realChild = realpathSync(child);
-    const realParent = realpathSync(parent);
-    // Ensure the real child path starts with the real parent path plus a separator to prevent false-positives
-    return realChild.startsWith(realParent + require("path").sep);
-  } catch (error) {
-    console.error(`Error resolving paths: ${(error as Error).message}`);
-    return false;
+  const relativePath = relative(parent, child);
+  return Boolean(
+    relativePath &&
+      !relativePath.startsWith(`..${sep}`) &&
+      !isAbsolute(relativePath)
+  );
+}
+
+function ensureOutputDirectory(outputDir: string) {
+  const validatedDir = validateSafePath(outputDir, "output directory");
+
+  if (!existsSync(validatedDir)) {
+    mkdirSync(validatedDir, { recursive: true, mode: 0o755 });
+  }
+
+  if (platform() === "linux") {
+    chmodSync(validatedDir, 0o755); // Explicit secure permissions
   }
 }
 
-function ensureOutputDirectory(
-  outputDir: string,
-  safeBase: string = SAFE_BASE_DIR
-) {
-  try {
-    const resolvedOutputDir = resolve(outputDir);
-    if (!isPathInside(resolvedOutputDir, resolve(safeBase))) {
-      console.error(
-        `❌ Unsafe output directory: ${resolvedOutputDir} is outside of allowed directory ${safeBase}`
-      );
-      process.exit(1);
-    }
-
-    if (!existsSync(resolvedOutputDir)) {
-      console.log(`📂 Creating output directory: ${resolvedOutputDir}`);
-      mkdirSync(resolvedOutputDir, { recursive: true });
-    }
-
-    if (platform() === "linux") {
-      const stats = statSync(resolvedOutputDir);
-      if (!(stats.mode & 0o222)) {
-        console.log(`🔧 Fixing permissions for ${resolvedOutputDir}...`);
-        chmodSync(resolvedOutputDir, stats.mode | 0o222);
-        console.log(`✅ Permissions fixed for ${resolvedOutputDir}`);
-      }
-    }
-  } catch (error) {
-    if (error instanceof Error)
-      console.error(
-        `❌ Failed to create or fix permissions for output directory: ${error.message}`
-      );
-  }
-}
-
-function ensureExecutablePermissions(
-  filePath: string,
-  safeBase: string = SAFE_BASE_DIR
-) {
-  let realFilePath: string;
-  try {
-    realFilePath = realpathSync(filePath);
-  } catch (error) {
-    console.error(
-      `❌ Failed to resolve real path for ${filePath}: ${
-        (error as Error).message
-      }`
-    );
-    return;
-  }
-
-  const safeBaseReal = realpathSync(safeBase);
-  const rel = relative(safeBaseReal, realFilePath);
-
-  // If the relative path starts with '..' or is absolute, realFilePath lies outside safeBaseReal.
-  if (rel.startsWith("..") || resolve(rel) === rel) {
-    console.error(
-      `❌ Unsafe file path: ${realFilePath} is outside of allowed directory ${safeBaseReal}`
-    );
-    return;
-  }
-
-  if (platform() !== "linux") return;
-
-  try {
-    const stats = statSync(realFilePath);
-    if (!(stats.mode & 0o111)) {
-      console.log(`🔧 Fixing permissions for ${realFilePath}...`);
-      chmodSync(realFilePath, stats.mode | 0o111);
-      console.log(`✅ Permissions fixed for ${realFilePath}`);
-    }
-  } catch (error) {
-    if (error instanceof Error)
-      console.error(`❌ Failed to fix permissions: ${error.message}`);
-  }
-}
-
+// Updated processing functions with path validation
 function processFile(filePath: string, outputDir: string, layout: string) {
+  const validatedPath = validateSafePath(filePath, "input file");
+
+  if (![".tsx", ".jsx"].includes(extname(validatedPath))) return;
+
   try {
-    if (![".tsx", ".jsx"].some((ext) => filePath.endsWith(ext)))
-      throw new Error(`Unsupported file type: ${filePath}`);
-
-    const code = readFileSync(filePath, "utf8");
+    const code = readFileSync(validatedPath, "utf8");
     const jsonResult = parseJSXToJSON(code, layout);
+    const outputName = `${basename(
+      validatedPath,
+      extname(validatedPath)
+    )}.json`;
+    const outputPath = join(outputDir, outputName);
 
-    const baseName = basename(filePath, extname(filePath));
-    const outputPath = join(outputDir, `${baseName}.json`);
-
+    validateSafePath(outputPath, "output file");
     writeFileSync(outputPath, JSON.stringify(jsonResult, null, 2));
-    console.log(`✅ Successfully wrote to ${outputPath}`);
+    console.log(`✅ Wrote ${outputPath}`);
   } catch (error) {
     if (error instanceof Error)
-      console.error(`❌ Error processing ${filePath}: ${error.message}`);
+      console.error(`❌ Error processing ${validatedPath}: ${error.message}`);
   }
 }
 
 function processDirectory(dirPath: string, outputDir: string, layout: string) {
-  const files = readdirSync(dirPath);
-  files.forEach((file) => {
-    const fullPath = join(dirPath, file);
-    if (statSync(fullPath).isDirectory()) {
+  const validatedDir = validateSafePath(dirPath, "input directory");
+
+  readdirSync(validatedDir, { withFileTypes: true }).forEach((dirent) => {
+    const fullPath = join(validatedDir, dirent.name);
+
+    if (dirent.isDirectory()) {
       processDirectory(fullPath, outputDir, layout);
-    } else if ([".tsx", ".jsx"].some((ext) => file.endsWith(ext))) {
+    } else if (
+      dirent.isFile() &&
+      [".tsx", ".jsx"].includes(extname(fullPath))
+    ) {
       processFile(fullPath, outputDir, layout);
     }
   });
 }
 
+// Updated command action
 parseCommand
-  .argument("<input>", "Path to a TSX/JSX file or directory")
+  .argument("<input>", "Path to TSX/JSX file or directory")
   .option("-o, --output <dir>", "Output directory", "result/json-output")
   .option("-l, --layout <type>", "Set layout type", "default")
   .option("-w, --watch", "Watch for changes")
   .action((inputPath: string, options) => {
-    const outputDir = options.output;
-    const layout = options.layout;
-    ensureOutputDirectory(outputDir);
-    ensureExecutablePermissions(process.argv[1]);
+    // Validate input path first
+    const validatedInput = validateSafePath(inputPath, "input");
 
-    if (statSync(inputPath).isDirectory())
-      processDirectory(inputPath, outputDir, layout);
-    else processFile(inputPath, outputDir, layout);
+    // Validate output directory
+    ensureOutputDirectory(options.output);
 
+    // Initial processing
+    if (statSync(validatedInput).isDirectory()) {
+      processDirectory(validatedInput, options.output, options.layout);
+    } else {
+      processFile(validatedInput, options.output, options.layout);
+    }
+
+    // Watch mode with validated paths
     if (options.watch) {
-      const watcher = watch(inputPath, {
+      const watcher = watch(validatedInput, {
         persistent: true,
         ignoreInitial: true,
         awaitWriteFinish: true,
+        followSymlinks: false, // Important security setting
       });
 
-      watcher.on("change", (filePath) => {
-        console.log(`\n🔄 Detected changes in ${filePath}`);
-        processFile(filePath, outputDir, layout);
+      watcher.on("change", (changedPath) => {
+        validateSafePath(changedPath, "watched file");
+        processFile(changedPath, options.output, options.layout);
       });
     }
   });
