@@ -9,12 +9,19 @@ import {
   writeFileSync,
   readdirSync,
 } from "fs";
-import { basename, join, extname } from "path";
+import { basename, join, extname, resolve, relative } from "path";
 import { platform } from "os";
 import { watch } from "chokidar";
 import { parseJSXToJSON } from "../parser/index";
 
 const parseCommand = new Command("jsxToJson");
+
+// Helper function to check if 'child' is within 'parent' directory.
+function isPathInside(child: string, parent: string): boolean {
+  const relativePath = relative(parent, child);
+  // If the relative path starts with ".." or is absolute, it's outside of 'parent'.
+  return !!relativePath && !relativePath.startsWith("..") && !resolve(relativePath).startsWith("..");
+}
 
 function ensureOutputDirectory(outputDir: string) {
   try {
@@ -39,15 +46,24 @@ function ensureOutputDirectory(outputDir: string) {
   }
 }
 
-function ensureExecutablePermissions(filePath: string) {
+function ensureExecutablePermissions(filePath: string, safeBase: string = process.cwd()) {
+  // Resolve the file path to an absolute path.
+  const resolvedPath = resolve(filePath);
+  
+  // Check that the resolved path is within the safe base directory.
+  if (!isPathInside(resolvedPath, resolve(safeBase))) {
+    console.error(`❌ Unsafe file path: ${resolvedPath} is outside of allowed directory ${safeBase}`);
+    return;
+  }
+
   if (platform() !== "linux") return;
 
   try {
-    const stats = statSync(filePath);
+    const stats = statSync(resolvedPath);
     if (!(stats.mode & 0o111)) {
-      console.log(`🔧 Fixing permissions for ${filePath}...`);
-      chmodSync(filePath, stats.mode | 0o111);
-      console.log(`✅ Permissions fixed for ${filePath}`);
+      console.log(`🔧 Fixing permissions for ${resolvedPath}...`);
+      chmodSync(resolvedPath, stats.mode | 0o111);
+      console.log(`✅ Permissions fixed for ${resolvedPath}`);
     }
   } catch (error) {
     if (error instanceof Error)

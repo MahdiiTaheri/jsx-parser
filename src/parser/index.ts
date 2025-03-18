@@ -57,7 +57,7 @@ export function parseJSXToJSON(jsx: string, layout: string = "dashboard") {
           } else {
             attrName = `${attr.name.namespace.name}:${attr.name.name.name}`;
           }
-          console.log("Processing attribute:", attrName, attr.value);
+          // console.log("Processing attribute:", attrName, attr.value);
           let attrValue;
           if (attr.value) {
             if (attr.value.type === "StringLiteral") {
