@@ -2,11 +2,11 @@ declare module "@babel/traverse" {
   import * as t from "@babel/types";
 
   export class NodePath<T = t.Node> {
-    replaceWith(arg0: { type: string; value: any }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    replaceWith(arg0: { type: string; value: unknown }) {
       throw new Error("Method not implemented.");
     }
     public node: T;
-    // You can add additional members as needed.
   }
 
   export interface Visitor<S = object> {
