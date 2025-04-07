@@ -11,7 +11,7 @@ import { usePageUpdate } from "@/hooks/usePageUpdate";
 const DEFAULT_URL =
   "https://sdui.kalabazzar.ir/api/pages?path=admin:/dashboard/test";
 
-const ConverterPage: React.FC = () => {
+const ConverterPage = () => {
   const [apiUrl, setApiUrl] = useState<string>(DEFAULT_URL);
   const [input, setInput] = useState<string>(INPUT_PLACEHOLDER);
   const [conversionType, setConversionType] = useState<string>("jsx-to-json");
