@@ -29,7 +29,7 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
         <button
           onClick={handleSendJsonQuery}
           disabled={!apiUrl?.trim() || isUpdating}
-          className="px-5 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
+          className="px-5 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90 pointer-events-none"
         >
           {isUpdating ? "Updating..." : "Update page"}
         </button>

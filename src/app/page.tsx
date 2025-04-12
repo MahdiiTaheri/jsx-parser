@@ -50,8 +50,9 @@ const ConverterPage = () => {
           id="apiUrl"
           type="text"
           value={apiUrl}
+          disabled={true}
           onChange={(e) => setApiUrl(e.target.value)}
-          className="w-full max-w-lg p-2 rounded-lg bg-slate-800 text-white"
+          className="w-full max-w-lg p-2 rounded-lg bg-slate-800 text-white cursor-not-allowed"
         />
       </motion.div>
       <div className="max-w-6xl mx-auto">
