@@ -76,6 +76,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           formatOnPaste: true,
           wordWrap: "bounded",
         }}
+        className={`${isPending ? "pointer-events-none" : ""}`}
         onMount={shouldFormatOnChange ? handleEditorDidMount : undefined}
         loading={<Loading />}
       />
