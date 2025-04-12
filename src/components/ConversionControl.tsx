@@ -6,9 +6,9 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
   handleConvert,
   isPending,
   inputValue,
-  handleSendJsonQuery,
-  isUpdating,
-  apiUrl,
+  // handleSendJsonQuery,
+  // isUpdating,
+  // apiUrl,
 }) => {
   return (
     <motion.div
@@ -26,13 +26,15 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
         <option value="json-to-jsx">JSON to JSX</option>
       </select>
       <div className="flex items-center gap-4">
-        <button
+        {/* <button
           onClick={handleSendJsonQuery}
-          disabled={!apiUrl?.trim() || isUpdating}
+          disabled={
+            !apiUrl?.trim() isUpdating
+          }
           className="px-5 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90 pointer-events-none"
         >
           {isUpdating ? "Updating..." : "Update page"}
-        </button>
+        </button> */}
         <button
           onClick={handleConvert}
           disabled={!inputValue.trim() || isPending}
