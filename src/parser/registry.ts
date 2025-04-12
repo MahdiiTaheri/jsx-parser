@@ -10,6 +10,10 @@ export const componentRegistry: Record<string, ComponentConfig> = {
   Divider: { component: "divider" },
   Form: { component: "form" },
   Input: { component: "input" },
+  Alert: { component: "alert" },
+  Accordion: { component: "accordion" },
+  Switch: { component: "switch" },
+  Separator: { component: "separator" },
   // Additional components can be added here.
 };
 
