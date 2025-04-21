@@ -1,18 +1,29 @@
-import * as motion from "motion/react-client";
+"use client";
+
+import { SunIcon } from "@/components/Sun";
+import { motion } from "motion/react";
+import { useTheme } from "next-themes";
 import Convert from "@/components/Convert";
+import { MoonIcon } from "@/components/Moon";
+import { Button } from "@/components/ui/button";
 
 const ConverterPage = () => {
-  // const [apiUrl, setApiUrl] = useState<string>("");
-  // const { updatePage, isUpdating } = usePageUpdate(apiUrl, output);
-
-  // const handleSendJsonQuery = useCallback(() => {
-  //   updatePage();
-  // }, [updatePage]);
+  const { theme, setTheme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-4">
+    <div className="relative min-h-screen dark:bg-slate-900 bg-gray-100 text-white p-4">
+      <Button
+        variant="ghost"
+        onClick={() => setTheme(isDark ? "light" : "dark")}
+        className="absolute top-4 right-4 rounded-xl md:[&_svg:not([class*='size-'])]:size-6"
+        asChild
+      >
+        {isDark ? <SunIcon /> : <MoonIcon className="text-black" />}
+      </Button>
+
       <motion.h1
-        className="text-2xl lg:text-4xl font-bold text-sky-400 text-center mb-4 mt-6"
+        className="text-2xl lg:text-4xl font-bold dark:text-sky-400 text-zinc-700 text-center mb-4 mt-6"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -20,17 +31,6 @@ const ConverterPage = () => {
         JSX & JSON Converter
       </motion.h1>
 
-      {/* <label htmlFor="apiUrl" className="block mb-1">
-          Route
-        </label>
-        <input
-          id="apiUrl"
-          type="text"
-          value={apiUrl}
-          disabled={true}
-          onChange={(e) => setApiUrl(e.target.value)}
-          className="w-full max-w-lg p-2 rounded-lg bg-slate-800 text-white cursor-not-allowed"
-        /> */}
       <Convert />
     </div>
   );

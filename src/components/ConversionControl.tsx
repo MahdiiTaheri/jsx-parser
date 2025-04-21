@@ -1,4 +1,12 @@
 import { motion } from "motion/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Button } from "./ui/button";
 
 const ConversionControls: React.FC<ConversionControlsProps> = ({
   conversionType,
@@ -6,9 +14,6 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
   handleConvert,
   isPending,
   inputValue,
-  // handleSendJsonQuery,
-  // isUpdating,
-  // apiUrl,
 }) => {
   return (
     <motion.div
@@ -17,31 +22,24 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
       transition={{ duration: 0.5, delay: 0.2 }}
       className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4"
     >
-      <select
-        className="max-w-fit px-5 py-2 bg-slate-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer"
-        value={conversionType}
-        onChange={(e) => setConversionType(e.target.value)}
-      >
-        <option value="jsx-to-json">JSX to JSON</option>
-        <option value="json-to-jsx">JSON to JSX</option>
-      </select>
+      <Select value={conversionType} onValueChange={setConversionType}>
+        <SelectTrigger className="dark:text-white text-secondary-foreground">
+          <SelectValue placeholder="Select conversion" />
+        </SelectTrigger>
+        <SelectContent className="dark:bg-slate-800">
+          <SelectItem value="jsx-to-json">JSX to JSON</SelectItem>
+          <SelectItem value="json-to-jsx">JSON to JSX</SelectItem>
+        </SelectContent>
+      </Select>
+
       <div className="flex items-center gap-4">
-        {/* <button
-          onClick={handleSendJsonQuery}
-          disabled={
-            !apiUrl?.trim() isUpdating
-          }
-          className="px-5 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90 pointer-events-none"
-        >
-          {isUpdating ? "Updating..." : "Update page"}
-        </button> */}
-        <button
+        <Button
           onClick={handleConvert}
           disabled={!inputValue.trim() || isPending}
-          className="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer active:scale-90"
+          className="px-5 py-2 dark:bg-sky-600 dark:hover:bg-sky-700 text-white rounded-lg cursor-pointer active:scale-90"
         >
           {isPending ? "Converting..." : "Convert"}
-        </button>
+        </Button>
       </div>
     </motion.div>
   );

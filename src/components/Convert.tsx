@@ -31,9 +31,6 @@ function Convert() {
           handleConvert={handleConvert}
           isPending={isConverting}
           inputValue={input}
-          // handleSendJsonQuery={handleSendJsonQuery}
-          // isUpdating={isUpdating}
-          // apiUrl={apiUrl}
         />
         <div className="flex flex-col md:flex-row gap-4">
           <EditorSection
