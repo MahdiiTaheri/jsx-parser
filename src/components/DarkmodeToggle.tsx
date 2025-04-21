@@ -6,7 +6,7 @@ import { SunIcon } from "./Sun";
 import { MoonIcon } from "./Moon";
 import { useEffect, useState } from "react";
 
-function DarkmodeSwitch() {
+function DarkmodeToggle() {
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -15,7 +15,7 @@ function DarkmodeSwitch() {
   }, []);
 
   const handleThemeChange = () => {
-    theme == "dark" ? setTheme("light") : setTheme("dark");
+    setTheme(theme == "dark" ? "white" : "dark");
   };
 
   if (!mounted) return null;
@@ -32,4 +32,4 @@ function DarkmodeSwitch() {
   );
 }
 
-export default DarkmodeSwitch;
+export default DarkmodeToggle;
