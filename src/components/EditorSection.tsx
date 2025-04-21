@@ -46,9 +46,9 @@ const EditorSection: React.FC<EditorSectionProps> = ({
       }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="flex-1 border-slate-700 rounded-lg relative"
+      className="flex-1 border-slate-700 relative space-y-2"
     >
-      <div className="p-2 border-b border-slate-700 bg-slate-800 text-sm">
+      <div className="p-2 border-b border-slate-700 bg-slate-800 font-semibold rounded-md">
         {title}
       </div>
       {enableCopy && (
@@ -79,6 +79,12 @@ const EditorSection: React.FC<EditorSectionProps> = ({
         className={`${isPending ? "pointer-events-none" : ""}`}
         onMount={shouldFormatOnChange ? handleEditorDidMount : undefined}
         loading={<Loading />}
+        beforeMount={(monaco) => {
+          monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+            noSemanticValidation: true,
+            noSyntaxValidation: true,
+          });
+        }}
       />
     </motion.div>
   );
