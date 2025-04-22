@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Button } from "./ui/button";
+import Loading from "./Loading";
 
 const ConversionControls: React.FC<ConversionControlsProps> = ({
   conversionType,
@@ -38,7 +39,7 @@ const ConversionControls: React.FC<ConversionControlsProps> = ({
           disabled={!inputValue.trim() || isPending}
           className="px-5 py-2 dark:bg-sky-600 dark:hover:bg-sky-700 text-white rounded-lg cursor-pointer active:scale-90"
         >
-          {isPending ? "Converting..." : "Convert"}
+          {isPending ? <Loading /> : "Convert"}
         </Button>
       </div>
     </motion.div>
