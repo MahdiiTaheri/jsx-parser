@@ -75,6 +75,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           readOnly: isPending,
           formatOnPaste: true,
           wordWrap: "bounded",
+          renderLineHighlight: "gutter",
         }}
         className={`${isPending ? "pointer-events-none" : ""} shadow-lg`}
         onMount={shouldFormatOnChange ? handleEditorDidMount : undefined}
