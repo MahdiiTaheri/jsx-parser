@@ -4,7 +4,7 @@ import DarkmodeToggle from "@/components/DarkmodeToggle";
 
 const ConverterPage = () => {
   return (
-    <div className="relative min-h-screen dark:bg-slate-900 bg-gray-100 text-white p-4">
+    <div className="relative min-h-screen dark:bg-slate-900 bg-gray-100 text-white p-4 transition-colors">
       <DarkmodeToggle />
 
       <motion.h1
